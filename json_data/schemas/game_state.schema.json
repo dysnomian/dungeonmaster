@@ -1,0 +1,488 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "game_id": {
+      "type": "string"
+    },
+    "game_name": {
+      "type": "string"
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "rules_set": {
+          "type": "string"
+        },
+        "game_master": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            }
+          },
+          "required": ["title"]
+        },
+        "players": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "player_id": {
+                "type": "string"
+              },
+              "player_name": {
+                "type": "string"
+              }
+            },
+            "required": ["player_id", "player_name"]
+          }
+        },
+        "game_length": {
+          "type": "string"
+        },
+        "session_length": {
+          "type": "string"
+        },
+        "tone": {
+          "type": "string"
+        },
+        "difficulty": {
+          "type": "string"
+        },
+        "setting": {
+          "type": "string"
+        },
+        "npc_death_allowed": {
+          "type": "boolean"
+        },
+        "pc_death_allowed": {
+          "type": "boolean"
+        },
+        "veils": {
+          "type": "array"
+        },
+        "lines": {
+          "type": "array"
+        },
+        "house_rules": {
+          "type": "array"
+        }
+      },
+      "required": [
+        "rules_set",
+        "game_master",
+        "players",
+        "game_length",
+        "session_length",
+        "tone",
+        "difficulty",
+        "setting",
+        "npc_death_allowed",
+        "pc_death_allowed",
+        "veils",
+        "lines",
+        "house_rules"
+      ]
+    },
+    "sessions": {
+      "type": "object",
+      "properties": {
+        "current": {
+          "type": "object",
+          "properties": {
+            "start_date": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "experience_awarded": {
+              "type": "integer"
+            },
+            "treasure_awarded": {
+              "type": "array"
+            },
+            "notes": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "start_date",
+            "experience_awarded",
+            "treasure_awarded",
+            "notes"
+          ]
+        },
+        "previous": {
+          "type": "array"
+        }
+      },
+      "required": ["current", "previous"]
+    },
+    "campaign": {
+      "type": "object",
+      "properties": {
+        "player_characters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "full_name": {
+                "type": "string"
+              },
+              "pronouns": {
+                "type": "string"
+              },
+              "calculated_attributes": {
+                "type": "object"
+              },
+              "race": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name"]
+              },
+              "age": {
+                "type": "integer"
+              },
+              "classes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "level": {
+                      "type": "integer"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          }
+                        },
+                        "required": ["name", "type", "description"]
+                      }
+                    }
+                  },
+                  "required": ["name", "level", "features"]
+                }
+              },
+              "alignment": {
+                "type": "string"
+              },
+              "background": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "feature": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      }
+                    },
+                    "required": ["name", "description"]
+                  },
+                  "proficiencies": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": ["name", "feature", "proficiencies"]
+              },
+              "level_up_system": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "current_xp": {
+                    "type": "integer"
+                  },
+                  "next_level_xp": {
+                    "type": "integer"
+                  }
+                },
+                "required": ["type", "current_xp", "next_level_xp"]
+              },
+              "health": {
+                "type": "object",
+                "properties": {
+                  "max_hp": {
+                    "type": "integer"
+                  },
+                  "current_hp": {
+                    "type": "integer"
+                  },
+                  "temporary_hp": {
+                    "type": "integer"
+                  },
+                  "conditions": {
+                    "type": "array"
+                  },
+                  "death_saves": {
+                    "type": "object",
+                    "properties": {
+                      "successes": {
+                        "type": "integer"
+                      },
+                      "failures": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": ["successes", "failures"]
+                  }
+                },
+                "required": [
+                  "max_hp",
+                  "current_hp",
+                  "temporary_hp",
+                  "conditions",
+                  "death_saves"
+                ]
+              },
+              "appearance": {
+                "type": "object",
+                "properties": {
+                  "height": {
+                    "type": "string"
+                  },
+                  "weight": {
+                    "type": "string"
+                  },
+                  "eyes": {
+                    "type": "string"
+                  },
+                  "skin": {
+                    "type": "string"
+                  },
+                  "hair": {
+                    "type": "string"
+                  }
+                },
+                "required": ["height", "weight", "eyes", "skin", "hair"]
+              },
+              "personality_traits": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "ideals": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "bonds": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "flaws": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "ability_scores": {
+                "type": "object",
+                "properties": {
+                  "strength": {
+                    "type": "integer"
+                  },
+                  "dexterity": {
+                    "type": "integer"
+                  },
+                  "constitution": {
+                    "type": "integer"
+                  },
+                  "intelligence": {
+                    "type": "integer"
+                  },
+                  "wisdom": {
+                    "type": "integer"
+                  },
+                  "charisma": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "strength",
+                  "dexterity",
+                  "constitution",
+                  "intelligence",
+                  "wisdom",
+                  "charisma"
+                ]
+              },
+              "proficiencies": {
+                "type": "object",
+                "properties": {
+                  "armor": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "source": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["name", "source"]
+                    }
+                  },
+                  "weapons": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "source": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["name", "source"]
+                    }
+                  },
+                  "languages": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "source": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["name", "source"]
+                    }
+                  },
+                  "skills": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "source": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["name", "source"]
+                    }
+                  },
+                  "tools": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "source": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["name", "source"]
+                    }
+                  }
+                },
+                "required": ["armor", "weapons", "languages", "skills", "tools"]
+              },
+              "equipment": {
+                "type": "array"
+              }
+            },
+            "required": [
+              "name",
+              "full_name",
+              "pronouns",
+              "calculated_attributes",
+              "race",
+              "age",
+              "classes",
+              "alignment",
+              "background",
+              "level_up_system",
+              "health",
+              "appearance",
+              "personality_traits",
+              "ideals",
+              "bonds",
+              "flaws",
+              "ability_scores",
+              "proficiencies",
+              "equipment"
+            ]
+          }
+        },
+        "npcs": {
+          "type": "array"
+        },
+        "locations": {
+          "type": "array"
+        },
+        "story": {
+          "type": "object",
+          "properties": {
+            "summary": {
+              "type": "string"
+            },
+            "primary_goal": {
+              "type": "string"
+            },
+            "secondary_goals": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "obstacles": {
+              "type": "array"
+            }
+          },
+          "required": [
+            "summary",
+            "primary_goal",
+            "secondary_goals",
+            "obstacles"
+          ]
+        }
+      },
+      "required": ["player_characters", "npcs", "locations", "story"]
+    }
+  },
+  "required": ["game_id", "game_name", "meta", "sessions", "campaign"]
+}

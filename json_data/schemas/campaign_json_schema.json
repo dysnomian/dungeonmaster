@@ -1,0 +1,307 @@
+{
+  "title": "Campaign Data",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "The title of the campaign."
+    },
+    "scenario": {
+      "type": "string",
+      "description": "The scenario or storyline of the campaign."
+    },
+    "current_session": {
+      "type": "integer",
+      "description": "The current session number."
+    },
+    "planned_campaign_length": {
+      "type": "integer",
+      "description": "The planned number of sessions for the campaign."
+    },
+    "characters": {
+      "type": "object",
+      "description": "An object containing character descriptions.",
+      "patternProperties": {
+        "^.*$": {
+          "type": "object",
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "A description of the character."
+            },
+            "appearance": {
+              "type": "string",
+              "description": "A description of the character's appearance."
+            },
+            "role": {
+              "type": "string",
+              "description": "The character's role (e.g., villain, ally)."
+            },
+            "race": {
+              "type": "string",
+              "description": "The character's race."
+            },
+            "personality": {
+              "type": "string",
+              "description": "A description of the character's personality."
+            },
+            "goals": {
+              "type": "string",
+              "description": "A description of the character's goals."
+            },
+            "allies": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "A list of the character's allies."
+            },
+            "enemies": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "A list of the character's enemies."
+            },
+            "nicknames": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "A list of the character's nicknames."
+            },
+            "aliases": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "A list of the character's aliases."
+            }
+          },
+          "required": [
+            "description",
+            "appearance",
+            "role",
+            "race",
+            "personality",
+            "goals"
+          ]
+        }
+      }
+    },
+    "setting": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the setting."
+        },
+        "description": {
+          "type": "string",
+          "description": "A description of the setting."
+        },
+        "areas": {
+          "type": "object",
+          "description": "An object containing descriptions of different areas in the setting.",
+          "patternProperties": {
+            "^.*$": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "description": "A description of the area."
+                },
+                "adjacent_areas": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "A list of adjacent areas."
+                },
+                "colors": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "A list of colors associated with the area."
+                },
+                "mascot": {
+                  "type": "string",
+                  "description": "The mascot or symbol of the area."
+                }
+              },
+              "required": [
+                "description",
+                "adjacent_areas"
+              ]
+            }
+          }
+        },
+        "factions": {
+          "type": "object",
+          "description": "An object containing descriptions of different factions in the setting.",
+          "patternProperties": {
+            "^.*$": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "description": "A description of the faction."
+                },
+                "locations": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "A list of locations associated with the faction."
+                },
+                "contacts": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "A list of contacts or members of the faction."
+                },
+                "leader": {
+                  "type": "string",
+                  "description": "The leader of the faction."
+                }
+              },
+              "required": [
+                "description"
+              ]
+            }
+          }
+        }
+      },
+      "required": [
+        "name",
+        "description",
+        "areas",
+        "factions"
+      ]
+    },
+    "locations": {
+      "type": "object",
+      "description": "An object containing descriptions of different locations.",
+      "patternProperties": {
+        "^.*$": {
+          "type": "object",
+          "properties": {
+            "area": {
+              "type": "string",
+              "description": "The area in which the location is situated."
+            },
+            "description": {
+              "type": "string",
+              "description": "A description of the location."
+            },
+            "inhabitants": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "A list of inhabitants or residents of the location."
+            },
+            "features": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "A list of notable features or landmarks at the location."
+            },
+            "nearby_locations": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "A list of nearby locations."
+            }
+          },
+          "required": [
+            "area",
+            "description"
+          ]
+        }
+      }
+    },
+    "party_members": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "A list of player characters in the party."
+    },
+    "story": {
+      "type": "object",
+      "properties": {
+        "premise": {
+          "type": "string",
+          "description": "The premise or setup of the campaign's story."
+        },
+        "goal": {
+          "type": "string",
+          "description": "The main goal or objective of the campaign."
+        },
+        "twists": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of potential twists or surprises in the story."
+        },
+        "climax": {
+          "type": "string",
+          "description": "The climax or final confrontation of the story."
+        },
+        "planned_sessions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "description": "The title of the session."
+              },
+              "goal": {
+                "type": "string",
+                "description": "The goal or objective of the session."
+              },
+              "focus": {
+                "type": "string",
+                "description": "The primary focus of the session (e.g., roleplaying, combat)."
+              },
+              "combat_encounter": {
+                "type": "string",
+                "description": "A description of a planned combat encounter during the session."
+              }
+            },
+            "required": [
+              "title",
+              "goal",
+              "focus"
+            ]
+          },
+          "description": "A list of planned sessions for the campaign."
+        }
+      },
+      "required": [
+        "premise",
+        "goal",
+        "climax",
+        "planned_sessions"
+      ]
+    }
+  },
+  "required": [
+    "title",
+    "scenario",
+    "current_session",
+    "planned_campaign_length",
+    "characters",
+    "setting",
+    "locations",
+    "party_members",
+    "story"
+  ]
+}

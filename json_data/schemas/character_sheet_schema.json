@@ -1,0 +1,839 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "D&D Character Sheet",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "full_name": {
+            "type": "string",
+            "default": ""
+        },
+        "pronouns": {
+            "type": "string"
+        },
+        "age": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "alignment": {
+            "type": "string",
+            "enum": [
+                "Lawful Good",
+                "Neutral Good",
+                "Chaotic Good",
+                "Lawful Neutral",
+                "True Neutral",
+                "Chaotic Neutral",
+                "Lawful Evil",
+                "Neutral Evil",
+                "Chaotic Evil"
+            ]
+        },
+        "race": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "features": {
+                    "type": "object",
+                    "additionalProperties": true
+                }
+            },
+            "required": [
+                "name"
+            ]
+        },
+        "classes": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "subclass": {
+                        "type": "string",
+                        "default": ""
+                    },
+                    "level": {
+                        "type": "integer"
+                    },
+                    "features": {
+                        "type": "object",
+                        "additionalProperties": true
+                    }
+                },
+                "required": [
+                    "name",
+                    "level"
+                ]
+            }
+        },
+        "ability_scores": {
+            "type": "object",
+            "properties": {
+                "strength": {
+                    "type": "integer"
+                },
+                "dexterity": {
+                    "type": "integer"
+                },
+                "constitution": {
+                    "type": "integer"
+                },
+                "intelligence": {
+                    "type": "integer"
+                },
+                "wisdom": {
+                    "type": "integer"
+                },
+                "charisma": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "strength",
+                "dexterity",
+                "constitution",
+                "intelligence",
+                "wisdom",
+                "charisma"
+            ]
+        },
+        "leveling": {
+            "type": "object",
+            "properties": {
+                "system": {
+                    "type": "string"
+                },
+                "experience_points": {
+                    "type": "integer",
+                    "minimum": 0
+                }
+            },
+            "required": [
+                "system"
+            ]
+        },
+        "conditions": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "default": []
+        },
+        "hit_points": {
+            "type": "object",
+            "properties": {
+                "current": {
+                    "type": "integer"
+                },
+                "maximum": {
+                    "type": "integer"
+                },
+                "temporary": {
+                    "type": "integer",
+                    "default": 0
+                }
+            },
+            "required": [
+                "current",
+                "maximum"
+            ]
+        },
+        "appearance": {
+            "type": "object",
+            "properties": {
+                "eyes": {
+                    "type": "string"
+                },
+                "hair": {
+                    "type": "string"
+                },
+                "skin": {
+                    "type": "string"
+                },
+                "height": {
+                    "type": "string"
+                },
+                "build": {
+                    "type": "string"
+                },
+                "weight": {
+                    "type": "string"
+                },
+                "distinguishing_features": {
+                    "type": "string"
+                }
+            }
+        },
+        "proficiencies": {
+            "type": "object",
+            "properties": {
+                "armor": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/proficiency"
+                    }
+                },
+                "weapons": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/proficiency"
+                    }
+                },
+                "tools": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/proficiency"
+                    }
+                },
+                "skills": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/proficiency"
+                    }
+                },
+                "languages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/proficiency"
+                    }
+                }
+            }
+        },
+        "spells": {
+            "type": "object",
+            "properties": {
+                "known": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/spell"
+                    }
+                },
+                "spellbook": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/spell"
+                    }
+                },
+                "prepared": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/spell"
+                    }
+                },
+                "slots": {
+                    "type": "object",
+                    "properties": {
+                        "total": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "oneOf": [
+                                    {
+                                        "type": "integer"
+                                    },
+                                    {
+                                        "type": "string",
+                                        "const": "Unlimited"
+                                    }
+                                ]
+                            }
+                        },
+                        "remaining": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "required": [
+                        "total",
+                        "remaining"
+                    ]
+                },
+                "racial_or_item_spells": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/spell"
+                    }
+                }
+            },
+            "required": [
+                "known",
+                "slots"
+            ]
+        },
+        "equipment": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/item"
+            }
+        },
+        "personality_traits": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "Array of strings describing personality traits."
+        },
+        "ideals": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "Array of strings describing ideals."
+        },
+        "bonds": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "Array of strings describing bonds."
+        },
+        "flaws": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "Array of strings describing flaws."
+        },
+        "allies": {
+            "type": "array",
+            "items": {
+                "oneOf": [
+                    {
+                        "$ref": "#/definitions/characterSummary"
+                    },
+                    {
+                        "$ref": "#/definitions/faction"
+                    }
+                ]
+            },
+            "description": "Array of character summaries for allies."
+        },
+        "enemies": {
+            "type": "array",
+            "items": {
+                "oneOf": [
+                    {
+                        "$ref": "#/definitions/characterSummary"
+                    },
+                    {
+                        "$ref": "#/definitions/faction"
+                    }
+                ]
+            },
+            "description": "Array of character summaries for enemies."
+        },
+        "organizations": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/faction"
+            },
+            "description": "Array of the character's factions or organizations."
+        }
+    },
+    "required": [
+        "name",
+        "pronouns",
+        "race",
+        "classes",
+        "ability_scores",
+        "alignment",
+        "age",
+        "leveling",
+        "hit_points",
+        "proficiencies"
+    ],
+    "definitions": {
+        "spell": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the spell."
+                },
+                "level": {
+                    "type": "string",
+                    "enum": [
+                        "Cantrip",
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "5",
+                        "6",
+                        "7",
+                        "8",
+                        "9"
+                    ],
+                    "description": "The spell level, including 'cantrip' for 0-level spells."
+                },
+                "source": {
+                    "type": "string",
+                    "description": "The source of the spell, such as a class, race, or item."
+                },
+                "recharges_on": {
+                    "type": "string",
+                    "enum": [
+                        "None",
+                        "Short Rest",
+                        "Long Rest"
+                    ],
+                    "description": "When the spell recharges. Omit or set to 'None' if not applicable.",
+                    "default": "None"
+                },
+                "extra_uses": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Extra uses granted beyond the standard number. Default is 0, implying no extra uses.",
+                    "default": 0
+                }
+            },
+            "required": [
+                "name",
+                "level",
+                "source"
+            ],
+            "additionalProperties": true
+        },
+        "proficiency": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "source": {
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "type": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "duration": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "limitations": {
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "recharges_on": {
+                                    "type": "string",
+                                    "enum": [
+                                        "short rest",
+                                        "long rest",
+                                        "per use"
+                                    ],
+                                    "default": "per use"
+                                }
+                            },
+                            "required": [
+                                "type",
+                                "name"
+                            ]
+                        }
+                    ]
+                },
+                "proficiency": {
+                    "type": "string",
+                    "enum": [
+                        "full",
+                        "half",
+                        "expert"
+                    ],
+                    "default": "full"
+                }
+            },
+            "required": [
+                "name",
+                "source"
+            ]
+        },
+        "damage": {
+            "type": "array",
+            "description": "Array defining damage for items and spells",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "dice_string": {
+                        "type": "string"
+                    },
+                    "damage_type": {
+                        "type": "string"
+                    },
+                    "modifier": {
+                        "type": "string",
+                        "description": "Ability score modifier affecting damage. Can specify combinations or conditions, e.g., 'Strength or Dexterity'."
+                    },
+                    "condition": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "dice_string",
+                    "damage_type"
+                ]
+            }
+        },
+        "item": {
+            "description": "An item that can be carried or worn by a character.",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "weight": {
+                    "type": "number"
+                },
+                "qty": {
+                    "type": "integer",
+                    "default": 1
+                },
+                "magical": {
+                    "type": "object",
+                    "properties": {
+                        "requires_attunement": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "attuned": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "special_features": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "feature": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "feature",
+                                    "description"
+                                ]
+                            },
+                            "default": []
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "wearable": {
+                    "type": "object",
+                    "properties": {
+                        "wear_slot": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "The body slot the item occupies (e.g., head, body, feet)."
+                        },
+                        "armor_class": {
+                            "type": "integer",
+                            "default": 0
+                        },
+                        "enhancement_bonus": {
+                            "type": "integer",
+                            "default": 0
+                        },
+                        "passive_effects": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "effect": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "effect",
+                                    "description"
+                                ]
+                            },
+                            "default": []
+                        },
+                        "active_effects": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "effect": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "effect",
+                                    "description"
+                                ]
+                            },
+                            "default": []
+                        },
+                        "equipped": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    },
+                    "required": [
+                        "wear_slot"
+                    ],
+                    "additionalProperties": false
+                },
+                "consumable": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Indicates if the item is consumable."
+                },
+                "container": {
+                    "type": "object",
+                    "properties": {
+                        "capacity": {
+                            "type": "number",
+                            "description": "Maximum weight the container can hold."
+                        },
+                        "contents": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/item"
+                            },
+                            "description": "Items contained within."
+                        },
+                        "restrictions": {
+                            "type": "array",
+                            "description": "Restrictions on what can be placed in the container.",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "required": [
+                        "capacity",
+                        "contents"
+                    ],
+                    "additionalProperties": false
+                },
+                "weapon": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "type": "string"
+                        },
+                        "attackType": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "melee",
+                                    "ranged",
+                                    "both"
+                                ]
+                            },
+                            "minItems": 1,
+                            "uniqueItems": true,
+                            "description": "Indicates the attack types the weapon is designed for."
+                        },
+                        "damage": {
+                            "$ref": "#/definitions/damage"
+                        },
+                        "properties": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "equipped": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "slot": {
+                            "type": "string",
+                            "enum": [
+                                "mainhand",
+                                "offhand",
+                                "two-handed",
+                                "not applicable"
+                            ],
+                            "default": "not applicable"
+                        },
+                        "range": {
+                            "type": "object",
+                            "properties": {
+                                "normal": {
+                                    "type": "integer"
+                                },
+                                "maximum": {
+                                    "type": "integer"
+                                }
+                            },
+                            "required": [
+                                "normal"
+                            ],
+                            "description": "Specifies the range for ranged attack types; required if 'ranged' is included in attackType."
+                        },
+                        "reach": {
+                            "type": "integer",
+                            "default": 5,
+                            "description": "Specifies the reach for melee attack types; relevant if 'melee' is included in attackType."
+                        },
+                        "ammunition": {
+                            "type": "object",
+                            "properties": {
+                                "type": {
+                                    "type": "string"
+                                },
+                                "quantity": {
+                                    "type": "integer",
+                                    "minimum": 0
+                                }
+                            },
+                            "required": [
+                                "type"
+                            ]
+                        },
+                        "enhancement_bonus": {
+                            "type": "integer",
+                            "default": 0
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "damage",
+                        "attackType"
+                    ]
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "name",
+                "weight"
+            ]
+        },
+        "characterSummary": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "relationship": {
+                    "type": "string"
+                },
+                "race": {
+                    "type": "string",
+                    "optional": true
+                },
+                "age": {
+                    "type": "integer",
+                    "optional": true
+                },
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "Alive",
+                        "Deceased"
+                    ]
+                },
+                "profession": {
+                    "type": "string",
+                    "optional": true
+                },
+                "factions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "personality": {
+                    "type": "string",
+                    "optional": true
+                },
+                "backstory": {
+                    "type": "string",
+                    "optional": true
+                },
+                "appearance": {
+                    "type": "string",
+                    "optional": true
+                },
+                "pronouns": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string",
+                    "optional": true
+                },
+                "home": {
+                    "type": "string",
+                    "optional": true
+                },
+                "current_location": {
+                    "type": "string",
+                    "optional": true
+                }
+            },
+            "required": [
+                "name",
+                "relationship",
+                "status",
+                "factions",
+                "pronouns"
+            ]
+        },
+        "faction": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "faction"
+                    ]
+                },
+                "leader": {
+                    "type": "string"
+                },
+                "goals": {
+                    "type": "string"
+                },
+                "background": {
+                    "type": "string"
+                },
+                "members": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "name",
+                "type"
+            ]
+        }
+    }
+}
