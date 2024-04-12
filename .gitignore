@@ -1,2 +1,13 @@
 *.code-workspace
 .vscode/*
+.envrc
+OAI_CONFIG_LIST
+paper/*
+.tool-versions
+logs.db
+chroma.log
+poertry.lock
+.vscode
+.cache
+__pycache__
+.DS_Store
