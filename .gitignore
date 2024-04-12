@@ -12,3 +12,5 @@ poertry.lock
 __pycache__
 .DS_Store
 dungeonmaster_venv
+node_modules/
+tmp/
