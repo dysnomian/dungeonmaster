@@ -11,3 +11,4 @@ poertry.lock
 .cache
 __pycache__
 .DS_Store
+dungeonmaster_venv
