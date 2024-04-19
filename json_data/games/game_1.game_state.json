@@ -1,354 +1,140 @@
 {
   "game_id": "1",
   "game_name": "D&D Test Game Alpha",
-  "meta": {
-    "rules_set": "Dungeons & Dragons 5th Edition",
-    "game_master": {
-      "title": "Dungeon Master"
-    },
-    "players": [
-      {
-        "player_id": "1",
-        "player_name": "Liss"
-      }
-    ],
-    "game_length": "1 session",
-    "session_length": "25 player actions",
-    "tone": "Comedic, Light-Hearted",
-    "difficulty": "Easy",
-    "setting": "Fairy Tale",
-    "npc_death_allowed": true,
-    "pc_death_allowed": true,
-    "veils": [],
-    "lines": [],
-    "house_rules": []
+  "rules_set": "Dungeons & Dragons 5th Edition",
+  "game_master": {
+    "title": "Dungeon Master"
   },
-  "dialogue": {
-    "currently_in_dialogue": false,
-    "speakers": []
-  },
-  "combat": {
-    "currently_in_combat": false,
-    "combatants": []
-  },
+  "players": [
+    {
+      "player_id": "1",
+      "player_name": "Liss"
+    }
+  ],
+  "game_length": "1 session",
+  "session_length": "25 player actions",
+  "tone": "Comedic, Light-Hearted",
+  "difficulty": "Easy",
+  "setting": "Fairy Tale",
+  "npc_death_allowed": true,
+  "pc_death_allowed": true,
+  "veils": [],
+  "lines": [],
   "sessions": {
     "current": {
       "start_date": "2024-04-09T12:00:00Z",
       "experience_awarded": 0,
       "treasure_awarded": [],
-      "notes": ""
+      "notes": "",
+      "dialogue": {
+        "currently_in_dialogue": false,
+        "speakers": [],
+        "current_speaker": ""
+      },
+      "combat": {
+        "currently_in_combat": false,
+        "combatants": [],
+        "round": 0,
+        "initiative_order": [],
+        "current_turn": ""
+      }
     },
     "previous": []
   },
   "campaign": {
-    "player_characters": [
-      {
-        "name": "Tes'Tcharak'Tor",
-        "full_name": "Tes'Tcharak'Tor",
-        "pronouns": "she/her",
-        "calculated_attributes": {
-          "proficiency_bonus": 2,
-          "initiative": 0,
-          "armor_class": 18,
-          "speed": 30,
-          "spell_save_dc": 12,
-          "encumbrance": 140,
-          "carrying_capacity": 240,
-          "senses": {
-            "passive_perception": 12
-          },
-          "health": {
-            "current_hp": 12,
-            "conditions": []
-          },
-          "saves": {
-            "strength": 3,
-            "dexterity": 1,
-            "constitution": 3,
-            "intelligence": 1,
-            "wisdom": 0,
-            "charisma": 2
-          },
-          "skills": {
-            "acrobatics": 0,
-            "animal_handling": 0,
-            "arcana": 0,
-            "athletics": 5,
-            "deception": 0,
-            "history": 3,
-            "insight": 0,
-            "intimidation": 4,
-            "investigation": 0,
-            "medicine": 0,
-            "nature": 0,
-            "perception": 2,
-            "performance": 0,
-            "persuasion": 0,
-            "religion": 0,
-            "sleight_of_hand": 0,
-            "stealth": 0,
-            "survival": 0
-          },
-          "ability_modifiers": {
-            "strength": 3,
-            "dexterity": 1,
-            "constitution": 2,
-            "intelligence": 1,
-            "wisdom": 0,
-            "charisma": 2
-          },
-          "actions": [
-            {
-              "name": "Longsword",
-              "type": "Melee Weapon Attack",
-              "description": "You swing your longsword at a creature within 5 feet of you.",
-              "attack_bonus": 5,
-              "damage": "1d8 + 3 slashing damage"
-            },
-            {
-              "name": "Pike",
-              "type": "Melee Weapon Attack",
-              "description": "You thrust your pike at a creature within 10 feet of you.",
-              "attack_bonus": 5,
-              "damage": "1d10 + 3 piercing damage"
-            }
-          ],
-          "bonus_actions": [
-            {
-              "name": "Second Wind",
-              "type": "Bonus Action",
-              "description": "You regain 1d10 + 1 hit points."
-            }
-          ],
-          "reactions": [
-            {
-              "name": "Protection",
-              "type": "Reaction",
-              "description": "When a creature you can see attacks a target other than you that is within 5 feet of you, you can use your reaction to impose disadvantage on the attack roll. You must be wielding a shield."
-            }
-          ]
-        },
-        "race": {
-          "name": "Human"
-        },
-        "age": 25,
-        "classes": [
-          {
-            "name": "Fighter",
-            "level": 1,
-            "features": [
-              {
-                "name": "Protection",
-                "type": "Fighting Style",
-                "description": "When a creature you can see attacks a target other than you that is within 5 feet of you, you can use your reaction to impose disadvantage on the attack roll. You must be wielding a shield."
-              },
-              {
-                "name": "Second Wind",
-                "type": "Class Feature",
-                "description": "On your turn, you can use a bonus action to regain 1d10 + 1 hit points. Once you use this feature, you must finish a short or long rest before you can use it again."
-              }
-            ]
-          }
-        ],
-        "alignment": "Neutral Good",
-        "background": {
-          "name": "Soldier",
-          "feature": {
-            "name": "Military Rank",
-            "description": "You have a military rank from your career as a soldier. Soldiers loyal to your former military organization still recognize your authority and influence, and they defer to you if they are of a lower rank. You can invoke your rank to exert influence over other soldiers and requisition simple equipment or horses for temporary use. You can also usually gain access to friendly military encampments and fortresses where your rank is recognized."
-          },
-          "proficiencies": [
-            "Athletics",
-            "Intimidation",
-            "Dice Set",
-            "Vehicles (Land)"
-          ]
-        },
-        "level_up_system": {
-          "type": "Experience Points",
-          "current_xp": 0,
-          "next_level_xp": 300
-        },
-        "health": {
-          "max_hp": 12,
-          "current_hp": 12,
-          "temporary_hp": 0,
-          "conditions": [],
-          "death_saves": {
-            "successes": 0,
-            "failures": 0
+    "player_character": {
+      "name": "Tes'Tcharak'Tor",
+      "race": "Human",
+      "age": 25,
+      "class": {
+        "name": "Fighter",
+        "level": 1
+      },
+      "alignment": "Neutral Good",
+      "background": "Soldier",
+      "abilityScores": {
+        "strength": 16,
+        "dexterity": 9,
+        "constitution": 15,
+        "intelligence": 13,
+        "wisdom": 11,
+        "charisma": 14
+      },
+      "proficiencyBonus": 2,
+      "armorClass": 18,
+      "initiative": 0,
+      "speed": 30,
+      "savingThrows": {
+        "strength": 3,
+        "dexterity": 1,
+        "constitution": 3,
+        "intelligence": 1,
+        "wisdom": 0,
+        "charisma": 2
+      },
+      "skills": {
+        "athletics": 5,
+        "history": 3,
+        "intimidation": 4,
+        "perception": 2
+      },
+      "equipment": [
+        {
+          "name": "Longsword",
+          "damage": {
+            "damageType": "Slashing",
+            "dice": "1d8",
+            "modifier": "STR"
           }
         },
-        "appearance": {
-          "height": "5'10\"",
-          "weight": "160 lbs",
-          "eyes": "Brown",
-          "skin": "Tan",
-          "hair": "Black"
-        },
-        "personality_traits": [
-          "You can stare down a hell hound without flinching."
-        ],
-        "ideals": [
-          "When people follow orders blindly, they embrace a kind of tyranny."
-        ],
-        "bonds": ["You fight for those who cannot fight for themselves."],
-        "flaws": [
-          "You'd rather eat your armor than admit when you\u2019re wrong."
-        ],
-        "ability_scores": {
-          "strength": 16,
-          "dexterity": 9,
-          "constitution": 15,
-          "intelligence": 13,
-          "wisdom": 11,
-          "charisma": 14
-        },
-        "proficiencies": {
-          "armor": [
-            {
-              "name": "All Armor",
-              "source": "Fighter"
-            },
-            {
-              "name": "Shields",
-              "source": "Fighter"
-            }
-          ],
-          "weapons": [
-            {
-              "name": "Simple Weapons",
-              "source": "Fighter"
-            },
-            {
-              "name": "Martial Weapons",
-              "source": "Fighter"
-            }
-          ],
-          "languages": [
-            {
-              "name": "Common",
-              "source": "Human"
-            },
-            {
-              "name": "Orc",
-              "source": "Human"
-            }
-          ],
-          "skills": [
-            {
-              "name": "Athletics",
-              "source": "Soldier"
-            },
-            {
-              "name": "Intimidation",
-              "source": "Soldier"
-            },
-            {
-              "name": "History",
-              "source": "Fighter"
-            },
-            {
-              "name": "Perception",
-              "source": "Fighter"
-            }
-          ],
-          "tools": [
-            {
-              "name": "Dice Set",
-              "source": "Soldier"
-            },
-            {
-              "name": "Vehicles (Land)",
-              "source": "Soldier"
-            }
-          ]
-        },
-        "equipment": [
-          {
-            "name": "Longsword",
-            "type": "Longsword",
-            "equipped": true,
-            "weight": 10,
-            "damage": [
-              {
-                "damage_type": "Slashing",
-                "dice": "1d8",
-                "modifier": "STR"
-              }
-            ],
-            "reach": 5,
-            "properties": ["Versatile (1d10)"],
-            "magical": false,
-            "slot": "main hand"
-          },
-          {
-            "name": "Pike",
-            "type": "Pike",
-            "equipped": false,
-            "weight": 18,
-            "damage": [
-              {
-                "damage_type": "Piercing",
-                "dice": "1d10",
-                "modifier": "STR"
-              }
-            ],
-            "reach": 10,
-            "properties": ["Heavy", "Two-Handed"],
-            "magical": false,
-            "slot": "two hands"
-          },
-          {
-            "name": "Chain Mail",
-            "type": "Chain Mail",
-            "equipped": true,
-            "weight": 55,
-            "armor_class": 16,
-            "magical": false,
-            "slot": "body"
-          },
-          {
-            "name": "Shield",
-            "type": "Shield",
-            "equipped": true,
-            "weight": 6,
-            "armor_class": 2,
-            "magical": false,
-            "slot": "off hand"
-          },
-          {
-            "name": "Explorer's Pack",
-            "type": "Explorer's Pack",
-            "weight": 59,
-            "contents": [
-              "Backpack",
-              "Bedroll",
-              "Mess Kit",
-              "Tinderbox",
-              "10 Torches",
-              "10 Days of Rations",
-              "Waterskin",
-              "50 ft. of Hempen Rope"
-            ]
-          },
-          {
-            "name": "Dice Set",
-            "type": "Dice Set",
-            "weight": 0.5,
-            "quantity": 1
+        {
+          "name": "Pike",
+          "damage": {
+            "damageType": "Piercing",
+            "dice": "1d10",
+            "modifier": "STR"
           }
-        ]
-      }
-    ],
+        },
+        {
+          "name": "Chain Mail",
+          "armorClass": 16
+        },
+        {
+          "name": "Shield",
+          "armorClass": 2
+        }
+      ],
+      "features": [
+        {
+          "name": "Fighting Style: Protection",
+          "description": "When a creature you can see attacks a target other than you that is within 5 feet of you, you can use your reaction to impose disadvantage on the attack roll. You must be wielding a shield."
+        },
+        {
+          "name": "Second Wind",
+          "description": "On your turn, you can use a bonus action to regain 1d10 + 1 hit points. Once you use this feature, you must finish a short or long rest before you can use it again."
+        },
+        {
+          "name": "Protection (Reaction)",
+          "description": "When a creature you can see attacks a target other than you that is within 5 feet of you, you can use your reaction to impose disadvantage on the attack roll. You must be wielding a shield."
+        }
+      ]
+    },
     "npcs": [],
     "locations": [],
     "story": {
       "summary": "Our hero must rescue the princess from the dragon",
-      "primary_goal": "Rescue the princess",
-      "secondary_goals": ["Get the magic sword", "Defeat the dragon"],
+      "primary_goal": "Rescue the princess from the dragon in the castle.",
+      "steps": [
+        "Leave the small village",
+        "Learn about the location of the princess",
+        "Rescue the fairy disguised as an old woman from the goblins",
+        "Get the magic sword",
+        "Defeat the ogre blocking the road",
+        "Travel to the castle",
+        "Defeat the dragon"
+      ],
       "obstacles": []
     }
   },
-  "players": ""
+  "player": "Liss"
 }
