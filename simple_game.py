@@ -1,26 +1,29 @@
-from typing import Annotated
+from typing import Annotated, Union, List, Any
 
 import autogen
 
-from agents.config import agent_config, termination_msg
+# import Sequence
+from llm_config import LLM_CONFIG, termination_msg
+from __old_stuff.character_sheet_team.config import agent_config, termination_msg
 from agents.stenographer import stenographer
-from dice_roller import DiceRoller
+from agents.dice_roller import DiceRoller
 from transcript import Transcript
-from game_state_manager import GameStateManager
+from db import engine
+
 from state_manager_agent import StateManagerAgent
+from sqlalchemy.sql import select
+
+from db import session as sesh
+from models.game import Game
+from models.campaign import Campaign
+from models.game_session import GameSession
+
+from sqlalchemy.orm import sessionmaker
 
 # we can select a game later on. For now, we'll just use the default game state
-game_state = GameStateManager("game_1.game_state.json")
-transcript = Transcript(game_state)
+STARTING_GAME_ID = 1
 
-config_list = autogen.config_list_from_json(env_or_file="OAI_CONFIG_LIST")
-
-general_llm_config = {
-    "seed": 42,  # change the seed for different trials
-    "temperature": 0.2,
-    "config_list": config_list,
-    "timeout": 120,
-}
+transcript = Transcript(STARTING_GAME_ID)
 
 # humans
 user_proxy = autogen.UserProxyAgent(
@@ -46,29 +49,51 @@ gamemaster = autogen.AssistantAgent(
 
 @gamemaster.register_for_execution()
 @gamemaster.register_for_llm(
-    description="Read the game meta properties from a file",
+    description="Read the game model from the database",
     api_style="tool",
 )
-def fetch_game_meta() -> Annotated[dict, "game_meta"]:
-    return game_state.meta()
+def game() -> Annotated[Union[Game, object], "game model"]:
+    """Read the game model from the database"""
+    stmt = select(Game).where(Game.id == STARTING_GAME_ID)
+    return sesh.execute(stmt).scalars().first()
 
 
 @gamemaster.register_for_execution()
 @gamemaster.register_for_llm(
-    description="Read the game story from a file",
+    description="Read the campaign from the database",
     api_style="tool",
 )
-def fetch_story() -> Annotated[dict, "story"]:
-    return game_state.story()
+def campaign() -> Annotated[Union[Campaign, object], "campaign"]:
+    """Read the game's campaign from the database"""
+    stmt = select(Campaign).where(Campaign.game_id == STARTING_GAME_ID)
+    return sesh.execute(stmt).scalars().first()
 
 
 @gamemaster.register_for_execution()
 @gamemaster.register_for_llm(
-    description="Read the campaign from a file",
+    description="Read the campaign story from the database",
     api_style="tool",
 )
-def fetch_campaign() -> Annotated[dict, "story"]:
-    return game_state.campaign()
+def story() -> (
+    Annotated[
+        Union[dict[str, Any], None], "Campaign story summary, goals, and objectives"
+    ]
+):
+    """Read the game's campaign story from the database"""
+    stmt = select(Campaign.story).where(Campaign.game_id == STARTING_GAME_ID)
+    return sesh.execute(stmt).scalars().first()
+
+
+@gamemaster.register_for_execution()
+@gamemaster.register_for_llm(
+    description="Read the current game session from the database",
+    api_style="tool",
+)
+def current_game_session() -> Annotated[Union[GameSession, None], "game session"]:
+    stmt = select(Game).where(Game.id == STARTING_GAME_ID)
+    game = sesh.execute(stmt).scalars().first()
+    if type(game) == Game:
+        return game.current_session()
 
 
 def append_message(
@@ -100,16 +125,13 @@ groupchat = autogen.GroupChat(
     # allowed_or_disallowed_speaker_transitions=allowed_speaker_transitions_dict,
     # speaker_transitions_type="allowed"
 )
-manager = autogen.GroupChatManager(
-    groupchat=groupchat,
-    llm_config=general_llm_config,
-)
+manager = autogen.GroupChatManager(groupchat=groupchat, llm_config=LLM_CONFIG[0])
 
 # Start the Chat!
 user_proxy.initiate_chat(
     manager,
     message="""
-    Please start a game from a game state JSON file. Use the game_1.game_state.json file to start.
+    Please recap the story for the current game session.
     """,
 )
 
