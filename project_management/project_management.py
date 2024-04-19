@@ -1,7 +1,7 @@
 import os
 import autogen
 
-from github_projects_graphql import get_project_board_status, update_project_item_field, update_project_item_iteration_field, update_project_item_single_select_field, get_project_fields
+from github_projects_graphql import get_board_status_options, get_project_board_status, update_project_item_field, update_project_item_single_select_field, update_project_item_iteration_field, get_project_fields
 
 # Set environment variables
 GITHUB_API_TOKEN = os.environ.get("GITHUB_API_TOKEN")

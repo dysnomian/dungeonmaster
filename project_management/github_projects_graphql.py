@@ -1,7 +1,9 @@
 import os
 import requests
 from typing import Annotated, Optional, Union, Dict, List
-from pydantic import BaseModel, Field
+
+from typing import Annotated, Optional, Union
+from pydantic import BaseModel
 
 # Define Pydantic models
 class ProjectV2ItemFieldTextValue(BaseModel):
@@ -396,3 +398,47 @@ def get_project_fields(
     """ % project_id
 
     return execute_graphql_query(query, return_json=return_json)
+
+def get_board_status_options(
+    project_id: Annotated[Optional[str], "The ID of the GitHub project to fetch fields from. Defaults to GITHUB_PROJECT_ID if not provided."] = GITHUB_PROJECT_ID,
+) -> Dict[str, str]:
+    """
+    Fetch the status options for a project board.
+
+    Args:
+        project_id (Optional[str]): The ID of the GitHub project to fetch fields from. Defaults to GITHUB_PROJECT_ID if not provided.
+
+    Returns:
+        Dict[str, str]: A dictionary of name to ID mappings for the status options.
+    """
+    fields = get_project_fields(project_id)
+    status_field_id = None
+    for field in fields["node"]["fields"]["nodes"]:
+        if field["name"] == "Status":
+            status_field_id = field["id"]
+            break
+
+    if status_field_id is None:
+        raise ValueError("Status field not found in project fields.")
+
+    options = field["options"]
+    return {option["name"]: option["id"] for option in options}
+
+def update_item_status(
+        item_id: Annotated[str, "The ID of the project item to update."],
+        status: Annotated[str, "The new status of the project item."]
+) -> Union[dict, ProjectV2Response]:
+    """
+    Update the status of a project item.
+
+    Args:
+        item_id (str): The ID of the project item to update.
+        status (str): The new status of the project item.
+
+    Returns:
+        Union[dict, ProjectV2Response]: The response from the GraphQL mutation, either as a JSON string or a Python dict.
+    """
+    fields = get_project_fields()
+    status_options = get_board_status_options()
+    status_field_id = None
+    
