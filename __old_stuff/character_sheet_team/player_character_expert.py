@@ -2,16 +2,13 @@ import os
 from typing import Annotated
 
 import autogen
-from agents.config import agent_config, termination_msg
+from __old_stuff.character_sheet_team.config import agent_config, termination_msg
 
 player_character_expert = autogen.AssistantAgent(
     name="PlayerCharacterExpert",
     is_termination_msg=termination_msg,
     llm_config=agent_config,
-    code_execution_config={
-        "last_n_messages": 2,
-        "work_dir": "json_data/characters"
-        },
+    code_execution_config={"last_n_messages": 2, "work_dir": "json_data/characters"},
     system_message="""
     You are an expert on the player character. You search the characters directory for files that contain information about the player character.
 
@@ -27,6 +24,7 @@ player_character_expert = autogen.AssistantAgent(
     """,
 )
 
+
 @player_character_expert.register_for_execution()
 @player_character_expert.register_for_llm(
     name="list_character_files", description="List the character files."
@@ -41,19 +39,19 @@ def list_character_files() -> str:
     except FileNotFoundError:
         return "The characters directory was not found."
 
+
 @player_character_expert.register_for_execution()
 @player_character_expert.register_for_llm(
     name="read_character_info", description="Read in the raw character info."
 )
 def read_character_info(
-    filename: Annotated[str, "The filename of the character info."]
+    filename: Annotated[str, "The filename of the character info."],
 ) -> str:
     """
     Reads the character info from a file.
     """
     try:
-        with open("json_data/characters/" + filename,
-                  "r", encoding="utf-8") as file:
+        with open("json_data/characters/" + filename, "r", encoding="utf-8") as file:
             character_info = file.read()
         return character_info
     except FileNotFoundError:

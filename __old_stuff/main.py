@@ -1,5 +1,5 @@
 import autogen
-from agents.config import agent_config, termination_msg
+from __old_stuff.character_sheet_team.config import agent_config, termination_msg
 from agents.stenographer import stenographer
 
 from agents.character_sheet_team.team import (

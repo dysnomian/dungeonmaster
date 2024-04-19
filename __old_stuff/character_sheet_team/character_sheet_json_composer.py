@@ -2,7 +2,7 @@ import json
 from typing_extensions import Annotated
 
 import autogen
-from agents.config import agent_config, termination_msg
+from __old_stuff.character_sheet_team.config import agent_config, termination_msg
 
 cs_json_composer = autogen.AssistantAgent(
     name="CharacterSheetJsonComposer",

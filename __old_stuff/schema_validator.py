@@ -3,7 +3,7 @@ from typing import Annotated
 
 import autogen
 import jsonschema
-from agents.config import agent_config, termination_msg
+from __old_stuff.character_sheet_team.config import agent_config, termination_msg
 
 schema_validator = autogen.AssistantAgent(
     name="SchemaValidator",
@@ -18,6 +18,7 @@ schema_validator = autogen.AssistantAgent(
     """,
 )
 
+
 @schema_validator.register_for_execution()
 @schema_validator.register_for_llm(
     name="read_character_sheet_schema",
@@ -28,7 +29,9 @@ def read_character_sheet_schema() -> str:
     Reads the character sheet schema from a file.
     """
     try:
-        with open("./json_data/schemas/character_sheet_schema.json", "r", encoding="utf-8") as file:
+        with open(
+            "./json_data/schemas/character_sheet_schema.json", "r", encoding="utf-8"
+        ) as file:
             character_sheet_schema = json.load(file)
         return character_sheet_schema
     except FileNotFoundError:

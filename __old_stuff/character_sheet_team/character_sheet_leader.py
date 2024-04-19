@@ -2,7 +2,7 @@ import json
 from typing import Annotated
 
 import autogen
-from agents.config import agent_config, termination_msg
+from __old_stuff.character_sheet_team.config import agent_config, termination_msg
 
 character_sheet_leader = autogen.AssistantAgent(
     name="CharacterSheetLeader",
@@ -16,6 +16,7 @@ character_sheet_leader = autogen.AssistantAgent(
     Once you, the schema validator, and the character expert approve the character sheet JSON, you write it to the file.
     """,
 )
+
 
 @character_sheet_leader.register_for_execution()
 @character_sheet_leader.register_for_llm(
