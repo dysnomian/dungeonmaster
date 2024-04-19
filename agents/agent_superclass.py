@@ -6,7 +6,7 @@ from typing import List, Union, Tuple
 
 from autogen import AssistantAgent, UserProxyAgent, register_function
 
-from llm_config import DEFAULT_LLM_CONFIG
+from llm_config import DEFAULT_AGENT_CONFIG
 
 
 class AgentSuperclass:
@@ -41,7 +41,7 @@ class AgentSuperclass:
     @property
     def llm_config(self) -> dict:
         "LLM config. If none is provided, the default config will be used."
-        return self.config.get("llm_config", DEFAULT_LLM_CONFIG)
+        return self.config.get("llm_config", DEFAULT_AGENT_CONFIG)
 
     @property
     def code_execution_config(self) -> Union[dict, None]:
