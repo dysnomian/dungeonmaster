@@ -450,9 +450,11 @@ class CharacterSheet(Base):
     )
     race_id: Mapped[int] = mapped_column(ForeignKey("races.id"))
     race: Mapped["Race"] = relationship("Race")
-    race_choices: Mapped[Dict[str, Any]] = mapped_column(JSONB, default={})
+    race_choices: Mapped[Dict[str, Any]] = mapped_column(
+        JSONB, default={}, nullable=True
+    )
     class_levels: Mapped[List[Dict[str, Any]]] = mapped_column(
-        JSONB, default=default_classes
+        JSONB, default=default_classes, nullable=True
     )
     background_id: Mapped[int] = mapped_column(ForeignKey("backgrounds.id"))
     background: Mapped["Background"] = relationship("Background")

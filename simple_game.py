@@ -20,6 +20,9 @@ from models.game_session import GameSession
 
 from sqlalchemy.orm import sessionmaker
 
+# seed the database
+import seed_test_data
+
 # we can select a game later on. For now, we'll just use the default game state
 STARTING_GAME_ID = 1
 

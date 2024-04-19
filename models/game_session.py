@@ -38,6 +38,8 @@ class GameSession(Base):
     game_id: Mapped[int] = mapped_column(ForeignKey("games.id"))
     game: Mapped["Game"] = relationship("Game", back_populates="game_sessions")
     summary: Mapped[str] = mapped_column(String, default="")
+    current_location: Mapped[str] = mapped_column(String, default="")
+    current_time: Mapped[str] = mapped_column(String, default="")
     player_actions_taken: Mapped[int] = mapped_column(Integer, default=0)
     created_at = mapped_column(TIMESTAMP, default=now())
     completed_at = mapped_column(TIMESTAMP, nullable=True)

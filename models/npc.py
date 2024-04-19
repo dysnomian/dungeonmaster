@@ -5,6 +5,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship, mapped_column, Mapped
 
 from models.base import Base
+from models.campaign import campaign_npcs_table
 
 default_stat_block = {
     "name": "Commoner",
@@ -32,11 +33,12 @@ default_stat_block = {
 }
 
 
-class NPC(Base):
+class Npc(Base):
     __tablename__ = "npcs"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(255))
+    full_name: Mapped[str] = mapped_column(String(255), nullable=True)
     stat_block: Mapped[str] = mapped_column(JSONB, default=default_stat_block)
     pronouns: Mapped[str] = mapped_column(String(255), default="they/them")
     race: Mapped[str] = mapped_column(String(255), default="Human")
@@ -45,3 +47,8 @@ class NPC(Base):
     personality_traits: Mapped[str] = mapped_column(JSONB, default={})
     plot_hooks: Mapped[str] = mapped_column(JSONB, default={})
     notes: Mapped[str] = mapped_column(JSONB, default={})
+    backstory: Mapped[str] = mapped_column(JSONB, default={})
+    current_condition: Mapped[str] = mapped_column(JSONB, default={})
+    campaigns: Mapped[List[int]] = relationship(
+        secondary=campaign_npcs_table, back_populates="npcs"
+    )

@@ -17,9 +17,7 @@ IMPORT_PATH = "import_data/"
 stmt = select(Source)
 sources = session.execute(stmt).scalars().all()
 source_dict = {source.abbreviation: source.id for source in sources}
-source_publication_date_dict = {
-    source.abbreviation: source.published for source in sources
-}
+reverse_source_dict = {source.id: source.abbreviation for source in sources}
 
 
 def import_races(filename) -> None:
@@ -44,40 +42,14 @@ def import_races(filename) -> None:
             print(f"Error sorting duplicate race names: {e}")
             pprint(race)
 
-    # make sets for each duplicated race name
-    duplicated_races = {}
-    for name in duplicated_names:
-        duplicated_races[name] = set()
-
     for race in combined_races:
         try:
             if race["name"] in duplicated_names:
-                race["source_publication_date"] = source_publication_date_dict[
-                    race["source"]
-                ]
-                duplicated_races[race["name"]].add(race)
+                race["name"] = f"{race["name"]} ({race["source"]})"
         except Exception as e:
-            print(f"Error appending source publication date {race["source"]} of {source_publication_date_dict[race["source"]]} to {race["name"]}: {e}")
+            print(f"Error appending source to duplicate race name: {e}")
             pprint(race)
 
-    duplicates = {}
-    for name in duplicated_names:
-        duplicates[name] = []
-
-    for race in combined_races:
-        if race["name"] in duplicated_names:
-            duplicates[race["name"]].append(race)
-
-    for races in duplicates:
-        races.sort(key=lambda x: x["published"], reverse=True)
-        for race in races:
-            if races.index(race) == 0:
-                race["legacy"] = False
-            else:
-                race["legacy"] = True
-
-    pprint(duplicates)
-    return
 
     for race in all_races["race"]:
         try:
@@ -124,12 +96,9 @@ def import_races(filename) -> None:
             print(f"subrace: {subrace.get('name')}")
 
             # get parent id and source id
-            parent_race_stmt = (
-                select(Race)
-                .filter(Race.source_id == source_dict.get(subrace.get("raceSource")))
-                .filter(Race.name == subrace.get("raceName"))
-            )
+            parent_race_stmt = select(Race).filter(Race.source_id == source_dict.get(subrace.get("raceSource"))).filter(Race.name == subrace.get("raceName"))
             parent_race = session.execute(parent_race_stmt).scalars().first()
+
 
             senses = {}
             senses["darkvision"] = subrace.get("darkvision", 0)
@@ -170,6 +139,7 @@ def import_races(filename) -> None:
         except Exception as e:
             print(f"Error importing subrace {subrace.get('name')} from {filename}: {e}")
             session.rollback()
+
 
 
 def import_all_races() -> None:
