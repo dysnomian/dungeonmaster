@@ -2,26 +2,20 @@ import os
 from pprint import pprint
 import json
 
-from sqlalchemy.sql import select
+from sqlalchemy.sql import select, or_
 
 from db import session, engine
 from models.base import Base
 from models.race import Race, RaceVariants
 from models.source import Source
+from utils.importers import IMPORT_PATH, source_dict
 
 Base.metadata.create_all(engine)
-
-IMPORT_PATH = "import_data/"
-
-# build a dict of all source ids with abbreviations
-stmt = select(Source)
-sources = session.execute(stmt).scalars().all()
-source_dict = {source.abbreviation: source.id for source in sources}
-reverse_source_dict = {source.id: source.abbreviation for source in sources}
 
 
 def import_races(filename) -> None:
     print(f"Importing races from {filename}")
+    print(f"source_dict: {source_dict()}")
     with open(filename, "r", encoding="utf-8") as f:
         all_races = json.load(f)
 
@@ -45,11 +39,11 @@ def import_races(filename) -> None:
     for race in combined_races:
         try:
             if race["name"] in duplicated_names:
+                race["original_name"] = race["name"]
                 race["name"] = f"{race["name"]} ({race["source"]})"
         except Exception as e:
             print(f"Error appending source to duplicate race name: {e}")
             pprint(race)
-
 
     for race in all_races["race"]:
         try:
@@ -68,7 +62,7 @@ def import_races(filename) -> None:
 
             race_obj = Race(
                 name=race["name"],
-                source_id=source_dict.get(race.get("source")),
+                source_id=source_dict().get(race["source"]),
                 source_page=race.get("page"),
                 size=race.get("size"),
                 speed=race.get("speed"),
@@ -96,9 +90,15 @@ def import_races(filename) -> None:
             print(f"subrace: {subrace.get('name')}")
 
             # get parent id and source id
-            parent_race_stmt = select(Race).filter(Race.source_id == source_dict.get(subrace.get("raceSource"))).filter(Race.name == subrace.get("raceName"))
+            parent_race_stmt = select(Race).filter(Race.source_id == source_dict().get(subrace.get("raceSource"))).filter(or_(Race.name == subrace.get("raceName"), Race.original_name == subrace.get("raceName")))
             parent_race = session.execute(parent_race_stmt).scalars().first()
 
+            if not parent_race:
+                raise Exception({"message":f"Parent race not found for race {subrace.get('raceName')} and source {subrace.get('raceSource')}"})
+            if not parent_race.id:
+                raise Exception({"message":f"Parent race id not found for race {subrace.get('raceName')} and source {subrace.get('raceSource')}"})
+            if not parent_race.source_id:
+                raise Exception({"message":f"Parent race source id not found for race {subrace.get('raceName')} and source {subrace.get('raceSource')}"})
 
             senses = {}
             senses["darkvision"] = subrace.get("darkvision", 0)
@@ -113,7 +113,7 @@ def import_races(filename) -> None:
 
             subrace_obj = RaceVariants(
                 name=subrace["name"],
-                source_id=source_dict.get(subrace.get("source")),
+                source_id=source_dict().get(subrace.get("source")),
                 source_page=subrace.get("page"),
                 size=subrace.get("size"),
                 speed=subrace.get("speed"),
@@ -139,7 +139,6 @@ def import_races(filename) -> None:
         except Exception as e:
             print(f"Error importing subrace {subrace.get('name')} from {filename}: {e}")
             session.rollback()
-
 
 
 def import_all_races() -> None:

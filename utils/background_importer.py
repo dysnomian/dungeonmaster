@@ -1,21 +1,12 @@
 import os
 import json
 
-from sqlalchemy.sql import select
-
 from db import session, engine
 from models.base import Base
 from models.background import Background
-from models.source import Source
+from utils.importers import IMPORT_PATH, source_dict
 
 Base.metadata.create_all(engine)
-
-IMPORT_PATH = "import_data/"
-
-# build a dict of all source ids with abbreviations
-stmt = select(Source)
-sources = session.execute(stmt).scalars().all()
-source_dict = {source.abbreviation: source.id for source in sources}
 
 
 def import_backgrounds(filename) -> None:
@@ -29,7 +20,7 @@ def import_backgrounds(filename) -> None:
             print(f"background: {background.get('name')}")
             background_obj = Background(
                 name=background.get("name"),
-                source_id=source_dict.get(background.get("source")),
+                source_id=source_dict().get(background.get("source")),
                 source_page=background.get("page"),
                 skill_proficiencies=background.get("skillProficiencies"),
                 tool_proficiencies=background.get("toolProficiencies"),

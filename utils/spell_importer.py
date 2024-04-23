@@ -1,21 +1,12 @@
 import os
 import json
 
-from sqlalchemy.sql import select
-
 from db import session, engine
 from models.base import Base
 from models.spell import Spell
-from models.source import Source
+from utils.importers import IMPORT_PATH, source_dict
 
 Base.metadata.create_all(engine)
-
-IMPORT_PATH = "import_data/"
-
-# build a dict of all source ids with abbreviations
-stmt = select(Source)
-sources = session.execute(stmt).scalars().all()
-source_dict = {source.abbreviation: source.id for source in sources}
 
 
 def import_spells(filename: str) -> None:
@@ -29,7 +20,7 @@ def import_spells(filename: str) -> None:
             print(f"Spell: {spell.get('name')}")
             spell_obj = Spell(
                 name=spell.get("name"),
-                source_id=source_dict.get(spell.get("source")),
+                source_id=source_dict().get(spell.get("source")),
                 source_page=spell.get("page"),
                 range=spell.get("range"),
                 time=spell.get("time"),
