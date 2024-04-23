@@ -1,14 +1,12 @@
 import json
 
-from typing import Any, List
+from typing import Any, List, TYPE_CHECKING
 
-from sqlalchemy import ForeignKey, Column, Table
+from sqlalchemy import ForeignKey, Column, Table, Integer
 from sqlalchemy.orm import relationship, mapped_column, Mapped
 from sqlalchemy.dialects.postgresql import JSONB
 
 from models.base import Base
-
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from models.character_sheet import CharacterSheet
@@ -40,13 +38,16 @@ campaign_npcs_table = Table(
 )
 
 
+print("***************** Importing models/campaign.py")
+
+
 class Campaign(Base):
     def __init__(self, **kw: Any):
         super().__init__(**kw)
 
     __tablename__ = "campaigns"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     locations: Mapped[List[Any]] = mapped_column(JSONB, default=[])
     npcs: Mapped[List["Npc"]] = relationship(
         secondary=campaign_npcs_table, back_populates="campaigns"

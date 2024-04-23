@@ -2,7 +2,7 @@ from typing import List, Dict, Any, Union
 
 from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy.orm import mapped_column, Mapped
+from sqlalchemy.orm import mapped_column, Mapped, relationship
 from models.base import Base
 
 senses_default = {
@@ -23,11 +23,50 @@ proficiencies_default = {
 speed_default = {"walk": 30, "fly": 0, "swim": 0, "climb": 0}
 
 
+print("***************** Importing models/races.py")
+
+DEFAULT_RACE_LIST = [
+    "human",
+    "elf",
+    "dwarf",
+    "halfling",
+    "gnome",
+    "half-elf",
+    "half-orc",
+    "tiefling",
+]
+
+RARE_RACE_LIST = ["dragonborn", "aarakocra"]
+
+
+def generate_race(race_options: List[str]) -> str:
+    race_list = [
+        "Human",
+        "Human",
+        "Human",
+        "Human",
+        "Elf",
+        "Dwarf",
+        "Dwarf",
+        "Halfling",
+        "Halfling",
+        "Gnome",
+        "Half-Elf",
+        "Half-Elf",
+        "Half-Orc",
+        "Tiefling",
+        "Dragonborn",
+    ]
+
+    return random.choice(race_list)
+
+
 class Race(Base):
     __tablename__ = "races"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(nullable=False)
+    original_name: Mapped[str] = mapped_column(nullable=True)
     basic_rules: Mapped[bool] = mapped_column(nullable=True, default=False)
     legacy: Mapped[bool] = mapped_column(nullable=True, default=False)
     source_id: Mapped[str] = mapped_column(ForeignKey("sources.id"), nullable=True)
@@ -62,6 +101,9 @@ class Race(Base):
     vulnerabilities: Mapped[List[str]] = mapped_column(JSONB, nullable=True, default=[])
     proficiencies: Mapped[Dict[str, List[str]]] = mapped_column(
         JSONB, nullable=True, default=proficiencies_default
+    )
+    variants: Mapped[List["RaceVariants"]] = relationship(
+        "RaceVariants", back_populates="parent_race"
     )
 
 
@@ -106,6 +148,7 @@ class RaceVariants(Base):
         JSONB, nullable=True, default=proficiencies_default
     )
     parent_race_id: Mapped[int] = mapped_column(ForeignKey("races.id"), nullable=False)
+    parent_race: Mapped["Race"] = relationship("Race", back_populates="variants")
     parent_race_source_id: Mapped[int] = mapped_column(ForeignKey("sources.id"))
     alias: Mapped[Any] = mapped_column(JSONB, nullable=True)
     overwrite: Mapped[Any] = mapped_column(JSONB, nullable=True)

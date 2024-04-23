@@ -1,14 +1,12 @@
 import json
 
-from typing import List, Dict, Any, Annotated
+from typing import List, Dict, Any, Annotated, TYPE_CHECKING
 
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from sqlalchemy.dialects.postgresql import JSONB
 
 from models.base import Base
-from models.player import Player
-from typing import TYPE_CHECKING
 
 from models.campaign import campaign_pcs_table
 
@@ -433,6 +431,8 @@ base_class_level_properties = {
         },
     ]
 }
+
+print("***************** Importing models/character_sheet.py")
 
 
 class CharacterSheet(Base):

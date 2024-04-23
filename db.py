@@ -13,5 +13,5 @@ url = URL.create(
     database=f"dungeonmaster_{environment}",
 )
 
-engine = create_engine(url, echo=True)
+engine = create_engine(url)
 session = Session(engine)

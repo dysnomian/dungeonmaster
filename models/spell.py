@@ -8,6 +8,9 @@ from models.base import Base
 from models.source import Source
 
 
+print("***************** Importing models/spell.py")
+
+
 class Spell(Base):
     __tablename__ = "spells"
 

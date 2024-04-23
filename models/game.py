@@ -1,25 +1,25 @@
-from typing import Any, List
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Integer, String, Boolean, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship, backref
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import JSONB
 
 from models.base import Base
-
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from models.player import Player
     from models.campaign import Campaign
     from models.game_session import GameSession
+    from models.campaign import Campaign
 
-from models.campaign import Campaign
+
+print("***************** Importing models/game.py")
 
 
 class Game(Base):
     __tablename__ = "games"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(255))
     rules_set = mapped_column(String, default="D&D 5e")
     game_length__sessions = mapped_column(Integer, nullable=True)
@@ -30,7 +30,7 @@ class Game(Base):
     npc_death_allowed = mapped_column(Boolean, default=True)
     pc_death_allowed = mapped_column(Boolean, default=True)
     rule_modifications = mapped_column(JSONB, default={})
-    player_id: Mapped[int] = mapped_column(ForeignKey("players.id"))
+    player_id: Mapped[int] = mapped_column(Integer, ForeignKey("players.id"))
     player: Mapped["Player"] = relationship("Player", back_populates="games")
     game_sessions = relationship("GameSession", back_populates="game")
     campaign: Mapped["Campaign"] = relationship(back_populates="game")
