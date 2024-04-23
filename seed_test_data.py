@@ -1,14 +1,17 @@
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-
 
 from db import engine
 from models.base import Base
+
+from utils.logging import logger
 
 from utils.source_importer import import_sources
 from utils.spell_importer import import_all_spells
 from utils.background_importer import import_all_backgrounds
 from utils.race_importer import import_all_races
 from utils.stat_block_importer import import_all_stat_blocks
+
 
 Base.metadata.create_all(engine)
 
@@ -38,7 +41,7 @@ Base.metadata.create_all(engine)
 with Session(engine) as sesh:
     player = sesh.query(Player).filter_by(name="Liss").first()
     if not player:
-        print("***************** Creating test player")
+        logger.info("***** Creating test player")
         player = Player(
             name="Liss",
             ask_first=["Graphic Gore", "Romance", "Sexual Content"],
@@ -58,7 +61,7 @@ with Session(engine) as sesh:
 
     game = sesh.query(Game).filter_by(name="Test Game").first()
     if not game:
-        print("***************** Creating test game")
+        logger.info("***** Creating test game")
         game = Game(
             name="Test Game",
             player_id=1,
@@ -82,7 +85,7 @@ with Session(engine) as sesh:
 
     campaign = sesh.query(Campaign).filter_by(game_id=game.id).first()
     if not campaign:
-        print("***************** Creating test campaign")
+        logger.info("***** Creating test campaign")
         campaign = Campaign(
             story={
                 "summary": "Our hero must rescue the princess from the dragon",
@@ -110,7 +113,7 @@ with Session(engine) as sesh:
         sesh.query(CharacterSheet).filter_by(name="Tes'Tcharak'Tor").first()
     )
     if not character_sheet:
-        print("***************** Creating test character sheet")
+        logger.info("***** Creating test character sheet")
         character_sheet = CharacterSheet(
             name="Tes'Tcharak'Tor",
             alignment="NG",
@@ -151,7 +154,7 @@ with Session(engine) as sesh:
 
     castle = sesh.query(Location).filter_by(name="Castle").first()
     if not castle:
-        print("***************** Creating test location")
+        logger.info("***** Creating test location")
         castle = Location(
             name="Castle",
             location_type="Large building",
@@ -186,12 +189,13 @@ with Session(engine) as sesh:
     princess = sesh.query(Npc).filter_by(first_name="Violet").first()
 
     if not princess:
-        print("***************** Creating test NPC")
+        logger.info("***** Creating test NPC")
         princess = Npc(
             first_name="Violet",
             full_name="Princess Violet",
             description="A beautiful princess with long golden hair and a kind smile.",
             stat_block_id=noble.id,
+            gender="female",
             pronouns="she/her",
             race="Human",
             alignment="LG",
@@ -206,11 +210,12 @@ with Session(engine) as sesh:
     dragon = sesh.query(Npc).filter_by(first_name="Kalvaxis").first()
 
     if not dragon:
-        print("***************** Creating test NPC")
+        logger.info("***** Creating test NPC")
         dragon = Npc(
             first_name="Kalvaxis",
             description="An evil black dragon.",
             stat_block_id=black_dragon.id,
+            gender="male",
             pronouns="he/him",
             race="Dragon",
             alignment="CE",
@@ -221,11 +226,9 @@ with Session(engine) as sesh:
         sesh.add(dragon)
         sesh.commit()
 
-    generate_npc()
-
     game_session = sesh.query(GameSession).filter_by(game_id=game.id).first()
     if not game_session:
-        print("***************** Creating game session")
+        logger.info("***** Creating game session")
         game_session = GameSession(
             game_id=game.id,
             current_location_id=village.id,

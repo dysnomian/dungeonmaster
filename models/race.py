@@ -3,6 +3,7 @@ from typing import List, Dict, Any, Union
 from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import mapped_column, Mapped, relationship
+from utils.logging import logger
 from models.base import Base
 
 senses_default = {
@@ -23,7 +24,7 @@ proficiencies_default = {
 speed_default = {"walk": 30, "fly": 0, "swim": 0, "climb": 0}
 
 
-print("***************** Importing models/races.py")
+logger.info("***** Importing models/races.py")
 
 DEFAULT_RACE_LIST = [
     "human",

@@ -4,24 +4,19 @@ import autogen
 
 # import Sequence
 from llm_config import LLM_CONFIG, termination_msg
-from __old_stuff.character_sheet_team.config import agent_config, termination_msg
+
 from agents.stenographer import stenographer
 from agents.dice_roller import DiceRoller
-from transcript import Transcript
-from db import engine
 
-from state_manager_agent import StateManagerAgent
+from transcript import Transcript
+
 from sqlalchemy.sql import select
 
 from db import session as sesh
+
 from models.game import Game
 from models.campaign import Campaign
 from models.game_session import GameSession
-
-from sqlalchemy.orm import sessionmaker
-
-# seed the database
-import seed_test_data
 
 # we can select a game later on. For now, we'll just use the default game state
 STARTING_GAME_ID = 1

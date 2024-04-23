@@ -6,6 +6,7 @@ from sqlalchemy import ForeignKey, Column, Table, Integer
 from sqlalchemy.orm import relationship, mapped_column, Mapped
 from sqlalchemy.dialects.postgresql import JSONB
 
+from utils.logging import logger
 from models.base import Base
 
 if TYPE_CHECKING:
@@ -38,7 +39,7 @@ campaign_npcs_table = Table(
 )
 
 
-print("***************** Importing models/campaign.py")
+logger.debug("***** Importing models/campaign.py")
 
 
 class Campaign(Base):

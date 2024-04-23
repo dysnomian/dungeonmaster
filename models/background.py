@@ -3,10 +3,12 @@ from typing import List
 from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import mapped_column, Mapped
+
+from utils.logging import logger
 from models.base import Base
 
 
-print("***************** Importing models/background.py")
+logger.debug("***** Importing models/background.py")
 
 
 class Background(Base):

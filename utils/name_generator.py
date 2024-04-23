@@ -9,6 +9,7 @@ import os
 
 import random
 
+from utils.logging import logger
 from utils.gender_tools import random_gender
 
 # Load the names from import_data/names.json
@@ -22,7 +23,7 @@ def select_name(race_name_dict: Dict[str, List], key_name: str, default: Union[s
         else:
             return random.choice(race_name_dict[key_name])
     except KeyError as e:
-        print(f"KeyError: {key_name} not found in {key_name}: {e}")
+        logger.error("KeyError: %s not found in %s: %s", key_name, key_name, e)
 
 
 # def generate_name_from_dict(race_name_dict: Dict[str,JDict[str, List]], requirements: Dict[str, Union[str, None]]) -> Dict[str, Union[str, None]]:

@@ -3,6 +3,8 @@ from typing import List
 from sqlalchemy import String, Integer
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship, mapped_column, Mapped
+
+from utils.logging import logger
 from models.base import Base
 
 
@@ -12,8 +14,7 @@ if TYPE_CHECKING:
     from models.character_sheet import CharacterSheet
     from models.game import Game
 
-
-print("***************** Importing models/player.py")
+logger.debug("***** Importing models/player.py")
 
 
 class Player(Base):

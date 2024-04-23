@@ -1,5 +1,4 @@
 import os
-from pprint import pprint
 import json
 
 from sqlalchemy.sql import select, or_
@@ -7,15 +6,16 @@ from sqlalchemy.sql import select, or_
 from db import session, engine
 from models.base import Base
 from models.race import Race, RaceVariants
-from models.source import Source
+
+from utils.logging import logger
 from utils.importers import IMPORT_PATH, source_dict
 
 Base.metadata.create_all(engine)
 
 
 def import_races(filename) -> None:
-    print(f"Importing races from {filename}")
-    print(f"source_dict: {source_dict()}")
+    logger.info("Importing races from %filename")
+    logger.debug("source_dict: %source_dict")
     with open(filename, "r", encoding="utf-8") as f:
         all_races = json.load(f)
 
@@ -33,8 +33,7 @@ def import_races(filename) -> None:
             if race["name"] not in all_names:
                 all_names.add(race["name"])
         except Exception as e:
-            print(f"Error sorting duplicate race names: {e}")
-            pprint(race)
+            logger.error("Error sorting duplicate race name: %s, %s", str(race), str(e))
 
     for race in combined_races:
         try:
@@ -42,12 +41,11 @@ def import_races(filename) -> None:
                 race["original_name"] = race["name"]
                 race["name"] = f"{race["name"]} ({race["source"]})"
         except Exception as e:
-            print(f"Error appending source to duplicate race name: {e}")
-            pprint(race)
+            logger.error("Error appending source to duplicate race name: %e")
 
     for race in all_races["race"]:
         try:
-            print(f"race: {race.get('name')}")
+            logger.debug("race: %s", race.get("name"))
 
             senses = {}
             senses["darkvision"] = race.get("darkvision", 0)
@@ -82,12 +80,17 @@ def import_races(filename) -> None:
             session.add(race_obj)
             session.commit()
         except Exception as e:
-            print(f"Error importing race {race.get('name')} from {filename}: {e}")
+            logger.error(
+                "Error importing race %s from %s: %e",
+                race.get("name"),
+                filename,
+                e,
+            )
             session.rollback()
 
     for subrace in all_races["subrace"]:
         try:
-            print(f"subrace: {subrace.get('name')}")
+            logger.info("subrace: %s", subrace.get("name"))
 
             # get parent id and source id
             parent_race_stmt = select(Race).filter(Race.source_id == source_dict().get(subrace.get("raceSource"))).filter(or_(Race.name == subrace.get("raceName"), Race.original_name == subrace.get("raceName")))
@@ -136,8 +139,21 @@ def import_races(filename) -> None:
             )
             session.add(subrace_obj)
             session.commit()
+        except KeyError as e:
+            logger.error(
+                "Error importing subrace from %s: %s\n%s",
+                filename,
+                str(subrace),
+                str(e),
+            )
+            session.rollback()
         except Exception as e:
-            print(f"Error importing subrace {subrace.get('name')} from {filename}: {e}")
+            logger.error(
+                "Couldn't find subrace %s from %s: %s",
+                subrace.get("name"),
+                filename,
+                e,
+            )
             session.rollback()
 
 
@@ -145,6 +161,10 @@ def import_all_races() -> None:
     # for each file in the import_data directory, call import_races
     # get a list of all files in the directory with "races.json" in the name
     import_files = [f for f in os.listdir(IMPORT_PATH) if "races.json" in f]
-    print(f"Found {len(import_files)} files to import: {import_files}")
+    logger.info(
+        "Found %d files to import: %s",
+        len(import_files),
+        import_files
+    )
     for import_file in import_files:
         import_races(IMPORT_PATH + import_file)

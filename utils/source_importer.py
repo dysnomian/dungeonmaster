@@ -1,6 +1,7 @@
 import json
 
 from db import session, engine
+from utils.logging import logger
 from models.base import Base
 from models.source import Source
 
@@ -15,15 +16,15 @@ def import_sources() -> None:
         with open(IMPORT_PATH, "r", encoding="utf-8") as f:
             sources = json.load(f)
     except FileNotFoundError:
-        print(f"Error: file {IMPORT_PATH} not found")
+        logger.error("Error: file %s not found", IMPORT_PATH)
         return
 
     combined_sources = sources.get("book", []) + sources.get("adventure", [])
-    print(f"Importing {len(combined_sources)} sources from {IMPORT_PATH}")
+    logger.info("Importing %d sources from %s", len(combined_sources), IMPORT_PATH)
 
     for source in combined_sources:
         try:
-            print("Source: ", source.get("name"))
+            logger.debug("source: %s", source.get("name"))
             source_obj = Source(
                 name=source.get("name"),
                 abbreviation=source.get("id"),
@@ -34,7 +35,10 @@ def import_sources() -> None:
             session.add(source_obj)
             session.commit()
         except Exception as e:
-            print(
-                f"Error importing source {source.get('name')} from {IMPORT_PATH}: {e}"
+            logger.error(
+                "Error importing source %s from %s: %s",
+                source.get("name"),
+                IMPORT_PATH,
+                e,
             )
             session.rollback()

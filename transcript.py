@@ -7,6 +7,8 @@ from db import session
 
 from typing import Annotated, List
 
+from utils.logging import logger
+
 TRANSCRIPT_DIR = "tmp/transcripts/"
 TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S"
 
@@ -16,7 +18,7 @@ class Transcript:
         stmt = select(Game).where(Game.id == game_id)
         game = session.execute(stmt).scalars().first()
         if not game:
-            print(f"Error: game with id {game_id} not found")
+            logger.error(f"Error: game with id {game_id} not found")
             return
         else:
             self.game = game
@@ -42,7 +44,9 @@ class Transcript:
                 f.write("# Game Transcript\n\n")
                 return True
         except PermissionError:
-            print(f"Error: permission denied to write to {self.transcript_filename}")
+            logger.error(
+                f"Error: permission denied to write to {self.transcript_filename}"
+            )
             return False
 
     def append(self, text: Annotated[str, "text"]) -> bool:
@@ -51,10 +55,12 @@ class Transcript:
                 f.write(text)
                 return True
         except PermissionError:
-            print(f"Error: permission denied to write to {self.transcript_filename}")
+            logger.error(
+                f"Error: permission denied to write to {self.transcript_filename}"
+            )
             return False
         except FileNotFoundError:
-            print(f"Error: transcript file {self.transcript_filename} not found")
+            logger.error(f"Error: transcript file {self.transcript_filename} not found")
             return False
 
     def append_message(self, message: str, sender: str) -> bool:
@@ -75,5 +81,5 @@ class Transcript:
             with open(self.transcript_filename, "r", encoding="utf-8") as f:
                 return f.read().split("\n\n----------\n\n")
         except FileNotFoundError:
-            print(f"Error: transcript file {self.transcript_filename} not found")
+            logger.error(f"Error: transcript file {self.transcript_filename} not found")
             return []

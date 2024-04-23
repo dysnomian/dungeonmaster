@@ -4,6 +4,7 @@ from sqlalchemy import Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import JSONB
 
+from utils.logging import logger
 from models.base import Base
 
 if TYPE_CHECKING:
@@ -12,8 +13,7 @@ if TYPE_CHECKING:
     from models.game_session import GameSession
     from models.campaign import Campaign
 
-
-print("***************** Importing models/game.py")
+logger.debug("***** Importing models/game.py")
 
 
 class Game(Base):

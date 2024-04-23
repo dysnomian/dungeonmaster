@@ -7,6 +7,7 @@ from sqlalchemy.orm import relationship, mapped_column, Mapped
 from sqlalchemy.dialects.postgresql import JSONB, TIMESTAMP
 from sqlalchemy.sql.functions import now
 
+from utils.logging import logger
 from models.base import Base
 
 if TYPE_CHECKING:
@@ -29,7 +30,7 @@ combat_default = json.dumps(
 )
 
 
-print("***************** Importing models/game_session.py")
+logger.debug("***** Importing models/game_session.py")
 
 
 class GameSession(Base):

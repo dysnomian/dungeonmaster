@@ -6,6 +6,7 @@ from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from sqlalchemy.dialects.postgresql import JSONB
 
+from utils.logging import logger
 from models.base import Base
 
 from models.campaign import campaign_pcs_table
@@ -432,7 +433,7 @@ base_class_level_properties = {
     ]
 }
 
-print("***************** Importing models/character_sheet.py")
+logger.debug("***** Importing models/character_sheet.py")
 
 
 class CharacterSheet(Base):

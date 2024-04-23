@@ -6,6 +6,7 @@ from sqlalchemy import String, Integer, ForeignKey
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship, mapped_column, Mapped
 
+from utils.logging import logger
 from models.base import Base
 from models.campaign import campaign_npcs_table
 
@@ -40,7 +41,7 @@ default_stat_block = {
 }
 
 
-print("***************** Importing models/npc.py")
+logger.debug("***** Importing models/npc.py")
 
 
 class Npc(Base):
