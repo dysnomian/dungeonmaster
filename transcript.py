@@ -1,24 +1,22 @@
 import os
 import datetime
 
-from sqlalchemy.sql import select
-from models.game import Game
 from db import session
 
-from typing import Annotated, List
+from typing import Annotated, List, TYPE_CHECKING
 
 from utils.logging import logger
+
+from models.game import Game
 
 TRANSCRIPT_DIR = "tmp/transcripts/"
 TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 
 class Transcript:
-    def __init__(self, game_id: int):
-        stmt = select(Game).where(Game.id == game_id)
-        game = session.execute(stmt).scalars().first()
+    def __init__(self, game: Game):
         if not game:
-            logger.error(f"Error: game with id {game_id} not found")
+            logger.error("Error: Valid game not provided to Transcript, game: %s", str(game))
             return
         else:
             self.game = game
