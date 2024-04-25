@@ -1,6 +1,7 @@
 import json
 
 from typing import Any, List, TYPE_CHECKING
+from datetime import datetime
 
 from sqlalchemy import Integer, String, ForeignKey
 from sqlalchemy.orm import relationship, mapped_column, Mapped
@@ -49,7 +50,7 @@ class GameSession(Base):
     current_location: Mapped["Location"] = relationship("Location")
     current_time: Mapped[str] = mapped_column(String, default="")
     player_actions_taken: Mapped[int] = mapped_column(Integer, default=0)
-    created_at = mapped_column(TIMESTAMP, default=now())
+    created_at: Mapped[datetime] = mapped_column(TIMESTAMP, default=now())
     completed_at = mapped_column(TIMESTAMP, nullable=True)
     dialogue: Mapped[List[Any]] = mapped_column(JSONB, default=dialogue_default)
     combat: Mapped[List[Any]] = mapped_column(JSONB, default=combat_default)
