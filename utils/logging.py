@@ -21,8 +21,4 @@ file_handler.setLevel(logging.INFO)  # Set the handler's log level to INFO
 logger.addHandler(stdout_handler)
 logger.addHandler(file_handler)
 
-# Test the logger
-logger.info("This will go to the file.")
-logger.warning("This will go to stdout and the file.")
-
 logger.debug("Logger initialized.")
