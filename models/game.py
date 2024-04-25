@@ -32,7 +32,7 @@ class Game(Base):
     rule_modifications = mapped_column(JSONB, default={})
     player_id: Mapped[int] = mapped_column(Integer, ForeignKey("players.id"))
     player: Mapped["Player"] = relationship("Player", back_populates="games")
-    game_sessions = relationship("GameSession", back_populates="game")
+    game_sessions: Mapped["GameSession"] = relationship("GameSession", back_populates="game")
     campaign: Mapped["Campaign"] = relationship(back_populates="game")
 
     def __repr__(self):

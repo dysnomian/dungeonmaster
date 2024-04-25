@@ -9,6 +9,8 @@ from sqlalchemy.dialects.postgresql import JSONB
 from utils.logging import logger
 from models.base import Base
 
+from models.npc import Npc
+
 if TYPE_CHECKING:
     from models.character_sheet import CharacterSheet
     from models.game import Game
@@ -43,6 +45,9 @@ logger.debug("***** Importing models/campaign.py")
 
 
 class Campaign(Base):
+    from models.character_sheet import CharacterSheet
+    from models.game import Game
+
     def __init__(self, **kw: Any):
         super().__init__(**kw)
 
@@ -51,6 +56,7 @@ class Campaign(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     locations: Mapped[List[Any]] = mapped_column(JSONB, default=[])
     npcs: Mapped[List["Npc"]] = relationship(
+        "Npc",
         secondary=campaign_npcs_table, back_populates="campaigns"
     )
     story: Mapped[dict[str, Any]] = mapped_column(JSONB, default=story_default)

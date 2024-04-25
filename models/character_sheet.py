@@ -9,8 +9,6 @@ from sqlalchemy.dialects.postgresql import JSONB
 from utils.logging import logger
 from models.base import Base
 
-from models.campaign import campaign_pcs_table
-
 if TYPE_CHECKING:
     from models.player import Player
     from models.race import Race
@@ -437,6 +435,11 @@ logger.debug("***** Importing models/character_sheet.py")
 
 
 class CharacterSheet(Base):
+    from models.player import Player
+    from models.background import Background
+    from models.campaign import Campaign
+    from models.race import Race
+
     __tablename__ = "character_sheets"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -447,6 +450,7 @@ class CharacterSheet(Base):
     player_id: Mapped[int] = mapped_column(ForeignKey("players.id"))
     player: Mapped["Player"] = relationship("Player", back_populates="characters")
     campaigns: Mapped[List["Campaign"]] = relationship(
+        "Campaign",
         secondary=campaign_pcs_table, back_populates="player_characters"
     )
     race_id: Mapped[int] = mapped_column(ForeignKey("races.id"))
