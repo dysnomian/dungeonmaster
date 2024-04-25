@@ -207,12 +207,13 @@ with Session(engine) as sesh:
         sesh.commit()
 
     black_dragon = sesh.query(StatBlock).filter_by(name="Adult Black Dragon").first()
-    dragon = sesh.query(Npc).filter_by(first_name="Kalvaxis").first()
+    dragon = sesh.query(Npc).filter_by(first_name="Ergotron").first()
 
     if not dragon:
         logger.info("***** Creating test NPC")
         dragon = Npc(
-            first_name="Kalvaxis",
+            first_name="Ergotron",
+            full_name="Ergotron the Destroyer",
             description="An evil black dragon.",
             stat_block_id=black_dragon.id,
             gender="male",
