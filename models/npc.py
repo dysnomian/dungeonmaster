@@ -8,7 +8,6 @@ from sqlalchemy.orm import relationship, mapped_column, Mapped
 
 from utils.logging import logger
 from models.base import Base
-from models.campaign import campaign_npcs_table
 
 if TYPE_CHECKING:
     from models.campaign import Campaign
@@ -45,6 +44,8 @@ logger.debug("***** Importing models/npc.py")
 
 
 class Npc(Base):
+    from models.campaign import campaign_npcs_table
+    j
     __tablename__ = "npcs"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -74,6 +75,7 @@ class Npc(Base):
     )
 
     campaigns: Mapped[List["Campaign"]] = relationship(
+        "Campaign",
         secondary=campaign_npcs_table, back_populates="npcs"
     )
 

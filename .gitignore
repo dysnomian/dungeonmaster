@@ -14,3 +14,4 @@ __pycache__
 dungeonmaster_venv
 node_modules/
 tmp/
+dm.log
