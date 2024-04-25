@@ -44,9 +44,9 @@ class AgentSuperclass:
         return self.config.get("llm_config", DEFAULT_AGENT_CONFIG)
 
     @property
-    def code_execution_config(self) -> Union[dict, None]:
-        "Code execution config. If none is provided, code execution will be disabled."
-        return self.config.get("code_execution_config", None)
+    def code_execution_config(self) -> Union[dict, False]:
+        "Code execution config. If False is provided, code execution will be disabled."
+        return self.config.get("code_execution_config", False)
 
     @property
     def human_input_mode(self) -> str:

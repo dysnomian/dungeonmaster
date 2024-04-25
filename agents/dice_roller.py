@@ -7,7 +7,7 @@ from typing import Annotated, Tuple, List
 
 import rolldice
 
-from agent_superclass import AgentSuperclass
+from agents.agent_superclass import AgentSuperclass
 
 
 def roll(
