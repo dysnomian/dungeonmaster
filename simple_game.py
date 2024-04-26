@@ -16,6 +16,8 @@ from utils.logging import logger
 from models.player import Player
 from models.game import Game
 from models.game_session import GameSession
+from models.campaign_npcs_table import campaign_npcs_table
+from models.campaign_pcs_table import campaign_pcs_table
 from models.campaign import Campaign
 from models.character_sheet import CharacterSheet
 from models.npc import Npc
@@ -40,90 +42,12 @@ test_game = session.execute(stmt).scalars().first()
 
 transcript = Transcript(test_game)
 
-gamemaster = autogen.AssistantAgent(
-    name="GameMaster",
-    is_termination_msg=termination_msg,
-    llm_config=DEFAULT_AGENT_CONFIG,
-    human_input_mode="NEVER",
-    code_execution_config={"last_n_messages": 10, "work_dir": "json_data/games/"},
-    system_message="""
-    You are a GameMaster. You are responsible for describing the world and progressing the game. You answer questions about the world and provide information about the setting. You can also introduce new characters and plot points. You ask the user, "What would you like to do next?" to prompt them to take action.
-
-    When something in the game state needs to change, you can ask the state manager to do it.
-    """,
-)
-
-
-@gamemaster.register_for_execution()
-@gamemaster.register_for_llm(
-    description="Read the game model from the database",
-    api_style="tool",
-)
-def game() -> Annotated[Union[Game, object], "game model"]:
-    """Read the game model from the database"""
-    stmt = select(Game).where(Game.id == STARTING_GAME_ID)
-    return sesh.execute(stmt).scalars().first()
-
-
-@gamemaster.register_for_execution()
-@gamemaster.register_for_llm(
-    description="Read the campaign from the database",
-    api_style="tool",
-)
-def campaign() -> Annotated[Union[Campaign, object], "campaign"]:
-    """Read the game's campaign from the database"""
-    stmt = select(Campaign).where(Campaign.game_id == STARTING_GAME_ID)
-    return sesh.execute(stmt).scalars().first()
-
-
-@gamemaster.register_for_execution()
-@gamemaster.register_for_llm(
-    description="Read the campaign story from the database",
-    api_style="tool",
-)
-def story() -> (
-    Annotated[
-        Union[dict[str, Any], None], "Campaign story summary, goals, and objectives"
-    ]
-):
-    """Read the game's campaign story from the database"""
-    stmt = select(Campaign.story).where(Campaign.game_id == STARTING_GAME_ID)
-    return sesh.execute(stmt).scalars().first()
-
-
-@gamemaster.register_for_execution()
-@gamemaster.register_for_llm(
-    description="Read the current game session from the database",
-    api_style="tool",
-)
-def current_game_session() -> Annotated[Union[GameSession, None], "game session"]:
-    stmt = select(Game).where(Game.id == STARTING_GAME_ID)
-    game = sesh.execute(stmt).scalars().first()
-    if type(game) == Game:
-        return game.current_session()
-
-
-def append_message(
-    message: Annotated[str, "message"],
-    sender: Annotated[str, "sender"],
-) -> bool:
-    return transcript.append_message(message, sender)
-
-
 dice_roller = DiceRoller({"user_proxy": user_proxy}).agent
 
 plot_writer = PlotWriterAgent({"user_proxy": user_proxy}).agent
 
-autogen.agentchat.register_function(
-    append_message,
-    caller=stenographer,
-    executor=user_proxy,
-    name="append_message",
-    description="Append a message to the transcript",
-)
-
 # agents = [user_proxy, stenographer, dice_roller, plot_writer]
-agents = [user_proxy, plot_writer]
+agents = [user_proxy, dice_roller, plot_writer]
 
 # start the "group chat" between agents and humans
 groupchat = autogen.GroupChat(
@@ -141,26 +65,6 @@ user_proxy.initiate_chat(
     Please read the story for the current game, flesh it out, and update it.
     """,
 )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # from typing import Annotated, Union, List, Any
