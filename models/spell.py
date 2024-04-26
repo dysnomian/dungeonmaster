@@ -2,11 +2,10 @@ from typing import List, Any, Dict
 
 from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy.orm import mapped_column, Mapped, relationship
+from sqlalchemy.orm import mapped_column, Mapped
 
 from utils.logging import logger
 from models.base import Base
-from models.source import Source
 
 
 logger.debug("***** Importing models/spell.py")
@@ -18,7 +17,6 @@ class Spell(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(unique=True, nullable=False)
     source_id: Mapped[int] = mapped_column(ForeignKey("sources.id"), nullable=True)
-    source: Mapped["Source"] = relationship("Source")
     source_page: Mapped[int] = mapped_column(Integer, nullable=True)
     range: Mapped[Dict[str, Any]] = mapped_column(
         JSONB, default={"type": "point", "distance": {"type": "feet", "amount": 60}}

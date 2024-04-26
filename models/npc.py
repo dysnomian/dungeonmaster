@@ -1,51 +1,26 @@
-from typing import List, TYPE_CHECKING, Union, Dict, Any
-
-import random
+from typing import TYPE_CHECKING, Set
 
 from sqlalchemy import String, Integer, ForeignKey
 from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy.orm import relationship, mapped_column, Mapped
+from sqlalchemy.orm import mapped_column, Mapped, relationship
 
 from utils.logging import logger
 from models.base import Base
-
-if TYPE_CHECKING:
-    from models.campaign import Campaign
-    from models.location import Location
-    from models.stat_block import StatBlock
-
-default_stat_block = {
-    "name": "Commoner",
-    "size": "M",
-    "type": {"type": "Humanoid", "tags": ["any race"]},
-    "alignment": ["any"],
-    "ac": [10],
-    "hp": {"average": 4, "formula": "1d8"},
-    "speed": {"walk": 30},
-    "str": 10,
-    "dex": 10,
-    "con": 10,
-    "int": 10,
-    "wis": 10,
-    "cha": 10,
-    "passive_perception": 10,
-    "languages": ["any"],
-    "cr": 0,
-    "actions": [
-        {
-            "name": "Club",
-            "entries": "Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 2 (1d4) bludgeoning damage.",
-        }
-    ],
-}
-
+from models.campaign_npcs_table import campaign_npcs_table
 
 logger.debug("***** Importing models/npc.py")
 
+if TYPE_CHECKING:
+    from models.location import Location
+    from models.stat_block import StatBlock
+    from models.campaign import Campaign
+else:
+    Location = "Location"
+    StatBlock = "StatBlock"
+    Campaign = "Campaign"
+
 
 class Npc(Base):
-    from models.campaign import campaign_npcs_table
-    j
     __tablename__ = "npcs"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -56,11 +31,10 @@ class Npc(Base):
     stat_block_id: Mapped[int] = mapped_column(
         ForeignKey("stat_blocks.id"), nullable=True
     )
-    stat_block: Mapped["StatBlock"] = relationship("StatBlock")
     gender: Mapped[str] = mapped_column(String(255), default="non-binary")
     pronouns: Mapped[str] = mapped_column(String(255), default="they/them")
     race: Mapped[str] = mapped_column(String(255), default="human")
-    alignment: Mapped[str] = mapped_column(String(255), default="Neutral")
+    alignment_code: Mapped[str] = mapped_column(String(255), default="N")
     description: Mapped[str] = mapped_column(JSONB, default={})
     personality_traits: Mapped[str] = mapped_column(JSONB, default={})
     plot_hooks: Mapped[str] = mapped_column(JSONB, default={})
@@ -70,14 +44,29 @@ class Npc(Base):
     current_location_id: Mapped[int] = mapped_column(
         ForeignKey("locations.id"), nullable=True
     )
-    current_location: Mapped["Location"] = relationship(
-        "Location", back_populates="inhabitants"
+    # Relationships
+    current_location: Mapped[Location] = relationship(
+        Location, back_populates="inhabitants"
     )
+    stat_block: Mapped[StatBlock] = relationship(StatBlock)
 
-    campaigns: Mapped[List["Campaign"]] = relationship(
-        "Campaign",
-        secondary=campaign_npcs_table, back_populates="npcs"
-    )
+    @property
+    def alignment(self) -> str:
+        return {
+            "L": "Lawful",
+            "N": "Neutral",
+            "C": "Chaotic",
+            "G": "Good",
+            "E": "Evil",
+            "CG": "Chaotic Good",
+            "CN": "Chaotic Neutral",
+            "CE": "Chaotic Evil",
+            "LG": "Lawful Good",
+            "LN": "Lawful Neutral",
+            "LE": "Lawful Evil",
+            "NG": "Neutral Good",
+            "NE": "Neutral Evil",
+        }.get(self.alignment_code, "Neutral")
 
     def __repr__(self):
-        return f"<Npc {self.first_name} {self.surname} {self.gender} {self.race} {self.alignment}>"
+        return f"<Npc full_name='{self.full_name}' stat_block='{self.stat_block}' gender='{self.gender}' race='{self.race}'>"

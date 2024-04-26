@@ -1,3 +1,23 @@
+# DB Table: backgrounds
+# CREATE TABLE
+#   public.backgrounds (
+#     id serial NOT NULL,
+#     name character varying NOT NULL,
+#     source_id integer NULL,
+#     source_page integer NULL,
+#     skill_proficiencies jsonb NULL,
+#     tool_proficiencies jsonb NULL,
+#     language_proficiencies jsonb NULL,
+#     starting_equipment jsonb NULL,
+#     entries jsonb NULL,
+#     additional_spells jsonb NULL
+#   );
+
+# ALTER TABLE
+#   public.backgrounds
+# ADD
+#   CONSTRAINT backgrounds_pkey PRIMARY KEY (id)
+
 from typing import List
 
 from sqlalchemy import ForeignKey, Integer
@@ -8,7 +28,7 @@ from utils.logging import logger
 from models.base import Base
 
 
-logger.debug("***** Importing models/background.py")
+logger.debug("Importing models/background.py")
 
 
 class Background(Base):

@@ -3,25 +3,20 @@ import json
 from typing import List, Dict, Any, Annotated, TYPE_CHECKING
 
 from sqlalchemy import ForeignKey, String
-from sqlalchemy.orm import relationship, Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import JSONB
 
 from utils.logging import logger
 from models.base import Base
+from models.campaign_pcs_table import campaign_pcs_table
 
 if TYPE_CHECKING:
     from models.player import Player
-    from models.race import Race
-    from models.background import Background
     from models.campaign import Campaign
+else:
+    Player = "Player"
+    Campaign = "Campaign"
 
-
-default_race = {
-    "name": "Variant Human",
-    "ability_score_increases": {"STR": 1, "DEX": 1},
-    "proficiencies": {"skills": ["Perception"], "languages": ["Common", "Goblin"]},
-    "feats": ["Alert"],
-}
 
 default_classes = [
     {
@@ -435,10 +430,6 @@ logger.debug("***** Importing models/character_sheet.py")
 
 
 class CharacterSheet(Base):
-    from models.player import Player
-    from models.background import Background
-    from models.campaign import Campaign
-    from models.race import Race
 
     __tablename__ = "character_sheets"
 
@@ -448,13 +439,7 @@ class CharacterSheet(Base):
     pronouns: Mapped[str] = mapped_column(String(255), default="they/them")
     alignment: Mapped[str] = mapped_column(String(255), default="Neutral")
     player_id: Mapped[int] = mapped_column(ForeignKey("players.id"))
-    player: Mapped["Player"] = relationship("Player", back_populates="characters")
-    campaigns: Mapped[List["Campaign"]] = relationship(
-        "Campaign",
-        secondary=campaign_pcs_table, back_populates="player_characters"
-    )
     race_id: Mapped[int] = mapped_column(ForeignKey("races.id"))
-    race: Mapped["Race"] = relationship("Race")
     race_choices: Mapped[Dict[str, Any]] = mapped_column(
         JSONB, default={}, nullable=True
     )
@@ -462,7 +447,6 @@ class CharacterSheet(Base):
         JSONB, default=default_classes, nullable=True
     )
     background_id: Mapped[int] = mapped_column(ForeignKey("backgrounds.id"))
-    background: Mapped["Background"] = relationship("Background")
     background_choices: Mapped[Dict[str, Any]] = mapped_column(JSONB, default={})
     appearance: Mapped[str] = mapped_column(JSONB, default=default_appearance)
     base_ability_scores: Mapped[Dict[str, int]] = mapped_column(
@@ -476,6 +460,10 @@ class CharacterSheet(Base):
         JSONB, default=default_level_up_system
     )
     temporary_changes: Mapped[str] = mapped_column(JSONB, default={})
+    # Relationships
+    campaigns: Mapped[List["Campaign"]] = relationship(
+        secondary=campaign_pcs_table, back_populates="pcs"
+    )
 
     def compile_proficiency_type(
         self,

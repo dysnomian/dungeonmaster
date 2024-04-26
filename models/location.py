@@ -1,14 +1,16 @@
-from typing import List, TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 
-from sqlalchemy import String, Integer
+from sqlalchemy import String, Integer, Boolean
 from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy.orm import relationship, mapped_column, Mapped
+from sqlalchemy.orm import mapped_column, Mapped, relationship
 from sqlalchemy.sql.schema import ForeignKey
 
 from models.base import Base
 
 if TYPE_CHECKING:
     from models.npc import Npc
+else:
+    Npc = "Npc"
 
 
 class Location(Base):
@@ -16,27 +18,30 @@ class Location(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(255))
+    description: Mapped[str] = mapped_column(String, default="", nullable=True)
     location_type: Mapped[str] = mapped_column(String(255))
-    description: Mapped[str] = mapped_column(JSONB, default={})
-    # adjacent_location_ids: Mapped[List[int]] = mapped_column(JSONB, default=[])
-    # contains: Mapped[List["Location"]] = relationship(
-    #     "Location", backref="inside_of_location"
-    # )
-    # inside_of: Mapped["Location"] = relationship(
-    #     "Location", backref="contains", remote_side=[id]
-    # )
-    # inside_of_location_id: Mapped[int] = mapped_column(ForeignKey("locations.id"))
-    inside_of_location_id: Mapped[int] = mapped_column(
-        ForeignKey("locations.id"), nullable=True
-    )
-    inside_of: Mapped["Location"] = relationship(
-        "Location", remote_side=[inside_of_location_id]
-    )
-    contains: Mapped[List["Location"]] = relationship(
-        "Location", foreign_keys=[inside_of_location_id], overlaps="inside_of"
-    )
-    inhabitants: Mapped[List["Npc"]] = relationship(
+    notes: Mapped[str] = mapped_column(JSONB, default={})
+    inhabitants: Mapped[List[Npc]] = relationship(
         "Npc", back_populates="current_location"
     )
+    edges: Mapped[List["Edge"]] = relationship(
+        "Edge", foreign_keys="[Edge.from_location_id,Edge.to_location_id]"
+    )
 
-    notes: Mapped[str] = mapped_column(JSONB, default={})
+
+class Edge(Base):
+    __tablename__ = "edges"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(255))
+    description: Mapped[str] = mapped_column(String, default="")
+    from_location_id: Mapped[int] = mapped_column(Integer, ForeignKey("locations.id"))
+    to_location_id: Mapped[int] = mapped_column(Integer, ForeignKey("locations.id"))
+    hidden: Mapped[bool] = mapped_column(Boolean, default=False)
+    transparent: Mapped[bool] = mapped_column(Boolean, default=False)
+    to_location: Mapped[Location] = relationship(
+        "Location", foreign_keys=[to_location_id], back_populates="edges"
+    )
+    from_location: Mapped[Location] = relationship(
+        "Location", foreign_keys=[from_location_id], back_populates="edges"
+    )

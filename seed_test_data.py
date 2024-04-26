@@ -1,5 +1,4 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, registry
 
 from db import engine
 from models.base import Base
@@ -11,15 +10,7 @@ from utils.spell_importer import import_all_spells
 from utils.background_importer import import_all_backgrounds
 from utils.race_importer import import_all_races
 from utils.stat_block_importer import import_all_stat_blocks
-
-
-Base.metadata.create_all(engine)
-
-import_sources()
-import_all_spells()
-import_all_races()
-import_all_backgrounds()
-import_all_stat_blocks()
+from utils.test_data_importer import import_test_data
 
 from models.player import Player
 from models.game import Game
@@ -29,8 +20,21 @@ from models.character_sheet import CharacterSheet
 from models.npc import Npc
 from models.race import Race
 from models.background import Background
-from models.location import Location
+from models.location import Location, Edge
 from models.stat_block import StatBlock
+
+Base.metadata.create_all(engine)
+
+RUN_FULL_IMPORTERS = False
+
+if RUN_FULL_IMPORTERS:
+    import_sources()
+    import_all_spells()
+    import_all_races()
+    import_all_backgrounds()
+    import_all_stat_blocks()
+else:
+    import_test_data()
 
 from utils.npc_generator import generate_npc
 
@@ -83,6 +87,15 @@ with Session(engine) as sesh:
         sesh.add(game)
         sesh.commit()
 
+    game_session = sesh.query(GameSession).filter_by(game_id=game.id).first()
+    if not game_session:
+        logger.info("***** Creating game session")
+        game_session = GameSession(
+            game_id=game.id,
+        )
+        sesh.add(game_session)
+        sesh.commit()
+
     campaign = sesh.query(Campaign).filter_by(game_id=game.id).first()
     if not campaign:
         logger.info("***** Creating test campaign")
@@ -102,6 +115,7 @@ with Session(engine) as sesh:
                 "obstacles": [],
             },
             game_id=game.id,
+            player_id=player.id,
         )
         sesh.add(campaign)
         sesh.commit()
@@ -169,7 +183,6 @@ with Session(engine) as sesh:
             name="Castle Keep",
             location_type="Building",
             description="A large central keep.",
-            inside_of=castle,
         )
         sesh.add(keep)
         sesh.commit()
@@ -182,6 +195,17 @@ with Session(engine) as sesh:
             description="A small village with a few houses and a tavern.",
         )
         sesh.add(village)
+        sesh.commit()
+
+    road = sesh.query(Edge).filter_by(name="Road to Castle").first()
+    if not road:
+        road = Edge(
+            name="Road to Castle",
+            from_location_id=village.id,
+            to_location_id=castle.id,
+            description="A dirt road leading to the castle.",
+        )
+        sesh.add(road)
         sesh.commit()
 
     noble = sesh.query(StatBlock).filter_by(name="Noble").first()  # id: 280
@@ -198,8 +222,7 @@ with Session(engine) as sesh:
             gender="female",
             pronouns="she/her",
             race="Human",
-            alignment="LG",
-            campaigns=[campaign],
+            alignment_code="LG",
             current_location_id=keep.id,
         )
 
@@ -219,23 +242,27 @@ with Session(engine) as sesh:
             gender="male",
             pronouns="he/him",
             race="Dragon",
-            alignment="CE",
-            campaigns=[campaign],
+            alignment_code="CE",
             current_location_id=castle.id,
         )
 
         sesh.add(dragon)
         sesh.commit()
 
-    game_session = sesh.query(GameSession).filter_by(game_id=game.id).first()
-    if not game_session:
-        logger.info("***** Creating game session")
-        game_session = GameSession(
-            game_id=game.id,
-            current_location_id=village.id,
-            current_time="Morning",
-        )
-        sesh.add(game_session)
-        sesh.commit()
-
-    npcs = sesh.query(Npc).filter(Npc.campaigns.any(id=campaign.id)).all()
+    print(princess.stat_block.name)
+    print(dragon.stat_block.name)
+    print(dragon.current_location.name)
+    print(princess.current_location.name)
+    campaign.npcs.add(princess)
+    campaign.npcs.add(dragon)
+    print(campaign.story["summary"])
+    print(campaign.npcs)
+    character_sheet.campaigns.append(campaign)
+    print(character_sheet.campaigns)
+    print(game.player)
+    print(game.campaign)
+    print(campaign.pcs)
+    print(castle.inhabitants)
+    print(road.from_location.name)
+    print(road.to_location.name)
+    print(castle.edges)

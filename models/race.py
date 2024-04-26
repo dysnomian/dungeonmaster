@@ -2,7 +2,7 @@ from typing import List, Dict, Any, Union
 
 from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy.orm import mapped_column, Mapped, relationship
+from sqlalchemy.orm import mapped_column, Mapped
 from utils.logging import logger
 from models.base import Base
 
@@ -103,9 +103,6 @@ class Race(Base):
     proficiencies: Mapped[Dict[str, List[str]]] = mapped_column(
         JSONB, nullable=True, default=proficiencies_default
     )
-    variants: Mapped[List["RaceVariants"]] = relationship(
-        "RaceVariants", back_populates="parent_race"
-    )
 
 
 class RaceVariants(Base):
@@ -149,7 +146,6 @@ class RaceVariants(Base):
         JSONB, nullable=True, default=proficiencies_default
     )
     parent_race_id: Mapped[int] = mapped_column(ForeignKey("races.id"), nullable=False)
-    parent_race: Mapped["Race"] = relationship("Race", back_populates="variants")
     parent_race_source_id: Mapped[int] = mapped_column(ForeignKey("sources.id"))
     alias: Mapped[Any] = mapped_column(JSONB, nullable=True)
     overwrite: Mapped[Any] = mapped_column(JSONB, nullable=True)

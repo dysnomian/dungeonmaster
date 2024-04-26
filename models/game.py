@@ -12,6 +12,11 @@ if TYPE_CHECKING:
     from models.campaign import Campaign
     from models.game_session import GameSession
     from models.campaign import Campaign
+else:
+    Player = "Player"
+    Campaign = "Campaign"
+    GameSession = "GameSession"
+    Campaign = "Campaign"
 
 logger.debug("***** Importing models/game.py")
 
@@ -30,10 +35,12 @@ class Game(Base):
     npc_death_allowed = mapped_column(Boolean, default=True)
     pc_death_allowed = mapped_column(Boolean, default=True)
     rule_modifications = mapped_column(JSONB, default={})
-    player_id: Mapped[int] = mapped_column(Integer, ForeignKey("players.id"))
-    player: Mapped["Player"] = relationship("Player", back_populates="games")
-    game_sessions: Mapped["GameSession"] = relationship("GameSession", back_populates="game")
-    campaign: Mapped["Campaign"] = relationship(back_populates="game")
+    player_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("players.id"), nullable=True
+    )
+    # Relationships
+    player: Mapped[Player] = relationship("Player", back_populates="games")
+    campaign: Mapped[Campaign] = relationship(back_populates="game")
 
     def __repr__(self):
         return f"<Game(id={self.id}, name={self.name} rules_set={self.rules_set}), game_length__sessions={self.game_length__sessions}, session_length__responses={self.session_length__responses}, tone={self.tone}, difficulty={self.difficulty}, setting={self.setting}, npc_death_allowed={self.npc_death_allowed}, pc_death_allowed={self.pc_death_allowed}, player={self.player})>"
