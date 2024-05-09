@@ -20,7 +20,8 @@ from models.character_sheet import CharacterSheet
 from models.npc import Npc
 from models.race import Race
 from models.background import Background
-from models.location import Location, Edge
+# from models.location import Location
+# from models.edge import Edge
 from models.stat_block import StatBlock
 
 Base.metadata.create_all(engine)
@@ -166,103 +167,103 @@ with Session(engine) as sesh:
         sesh.add(character_sheet)
         sesh.commit()
 
-    castle = sesh.query(Location).filter_by(name="Castle").first()
-    if not castle:
-        logger.info("***** Creating test location")
-        castle = Location(
-            name="Castle",
-            location_type="Large building",
-            description="A large stone castle wall with a moat and drawbridge.",
-        )
-        sesh.add(castle)
-        sesh.commit()
+    # castle = sesh.query(Location).filter_by(name="Castle").first()
+    # if not castle:
+    #     logger.info("***** Creating test location")
+    #     castle = Location(
+    #         name="Castle",
+    #         location_type="Large building",
+    #         description="A large stone castle wall with a moat and drawbridge.",
+    #     )
+    #     sesh.add(castle)
+    #     sesh.commit()
 
-    keep = sesh.query(Location).filter_by(name="Keep").first()
-    if not keep:
-        keep = Location(
-            name="Castle Keep",
-            location_type="Building",
-            description="A large central keep.",
-        )
-        sesh.add(keep)
-        sesh.commit()
+    # keep = sesh.query(Location).filter_by(name="Keep").first()
+    # if not keep:
+    #     keep = Location(
+    #         name="Castle Keep",
+    #         location_type="Building",
+    #         description="A large central keep.",
+    #     )
+    #     sesh.add(keep)
+    #     sesh.commit()
 
-    village = sesh.query(Location).filter_by(name="Humbleton Village").first()
-    if not village:
-        village = Location(
-            name="Humbleton Village",
-            location_type="Village",
-            description="A small village with a few houses and a tavern.",
-        )
-        sesh.add(village)
-        sesh.commit()
+    # village = sesh.query(Location).filter_by(name="Humbleton Village").first()
+    # if not village:
+    #     village = Location(
+    #         name="Humbleton Village",
+    #         location_type="Village",
+    #         description="A small village with a few houses and a tavern.",
+    #     )
+    #     sesh.add(village)
+    #     sesh.commit()
 
-    road = sesh.query(Edge).filter_by(name="Road to Castle").first()
-    if not road:
-        road = Edge(
-            name="Road to Castle",
-            from_location_id=village.id,
-            to_location_id=castle.id,
-            description="A dirt road leading to the castle.",
-        )
-        sesh.add(road)
-        sesh.commit()
+    # road = sesh.query(Edge).filter_by(name="Road to Castle").first()
+    # if not road:
+    #     road = Edge(
+    #         name="Road to Castle",
+    #         from_location_id=village.id,
+    #         to_location_id=castle.id,
+    #         description="A dirt road leading to the castle.",
+    #     )
+    #     sesh.add(road)
+    #     sesh.commit()
 
-    noble = sesh.query(StatBlock).filter_by(name="Noble").first()  # id: 280
+    # noble = sesh.query(StatBlock).filter_by(name="Noble").first()  # id: 280
 
-    princess = sesh.query(Npc).filter_by(first_name="Violet").first()
+    # princess = sesh.query(Npc).filter_by(first_name="Violet").first()
 
-    if not princess:
-        logger.info("***** Creating test NPC")
-        princess = Npc(
-            first_name="Violet",
-            full_name="Princess Violet",
-            description="A beautiful princess with long golden hair and a kind smile.",
-            stat_block_id=noble.id,
-            gender="female",
-            pronouns="she/her",
-            race="Human",
-            alignment_code="LG",
-            current_location_id=keep.id,
-        )
+    # if not princess:
+    #     logger.info("***** Creating test NPC")
+    #     princess = Npc(
+    #         first_name="Violet",
+    #         full_name="Princess Violet",
+    #         description="A beautiful princess with long golden hair and a kind smile.",
+    #         stat_block_id=noble.id,
+    #         gender="female",
+    #         pronouns="she/her",
+    #         race="Human",
+    #         alignment_code="LG",
+    #         current_location_id=keep.id,
+    #     )
 
-        sesh.add(princess)
-        sesh.commit()
+    #     sesh.add(princess)
+    #     sesh.commit()
 
-    black_dragon = sesh.query(StatBlock).filter_by(name="Adult Black Dragon").first()
-    dragon = sesh.query(Npc).filter_by(first_name="Ergotron").first()
+    # black_dragon = sesh.query(StatBlock).filter_by(name="Adult Black Dragon").first()
+    # dragon = sesh.query(Npc).filter_by(first_name="Ergotron").first()
 
-    if not dragon:
-        logger.info("***** Creating test NPC")
-        dragon = Npc(
-            first_name="Ergotron",
-            full_name="Ergotron the Destroyer",
-            description="An evil black dragon.",
-            stat_block_id=black_dragon.id,
-            gender="male",
-            pronouns="he/him",
-            race="Dragon",
-            alignment_code="CE",
-            current_location_id=castle.id,
-        )
+    # if not dragon:
+    #     logger.info("***** Creating test NPC")
+    #     dragon = Npc(
+    #         first_name="Ergotron",
+    #         full_name="Ergotron the Destroyer",
+    #         description="An evil black dragon.",
+    #         stat_block_id=black_dragon.id,
+    #         gender="male",
+    #         pronouns="he/him",
+    #         race="Dragon",
+    #         alignment_code="CE",
+    #         current_location_id=castle.id,
+    #     )
 
-        sesh.add(dragon)
-        sesh.commit()
+    #     sesh.add(dragon)
+    #     sesh.commit()
 
-    print(princess.stat_block.name)
-    print(dragon.stat_block.name)
-    print(dragon.current_location.name)
-    print(princess.current_location.name)
-    campaign.npcs.add(princess)
-    campaign.npcs.add(dragon)
-    print(campaign.story["summary"])
-    print(campaign.npcs)
-    character_sheet.campaigns.append(campaign)
-    print(character_sheet.campaigns)
-    print(game.player)
-    print(game.campaign)
-    print(campaign.pcs)
-    print(castle.inhabitants)
-    print(road.from_location.name)
-    print(road.to_location.name)
-    print(castle.edges)
+    # print(princess.stat_block.name)
+    # print(dragon.stat_block.name)
+    # print(dragon.current_location.name)
+    # print(princess.current_location.name)
+    # campaign.npcs.add(princess)
+    # campaign.npcs.add(dragon)
+    # print(campaign.story["summary"])
+    # print(campaign.npcs)
+    # character_sheet.campaigns.append(campaign)
+    # print(character_sheet.campaigns)
+    # print(game.player)
+    # print(game.campaign)
+    # print(campaign.pcs)
+    # print(castle.inhabitants)
+    # print(road.from_location.name)
+    # print(road.to_location.name)
+    # print(castle.edges)

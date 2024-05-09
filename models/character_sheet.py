@@ -13,9 +13,13 @@ from models.campaign_pcs_table import campaign_pcs_table
 if TYPE_CHECKING:
     from models.player import Player
     from models.campaign import Campaign
+    from models.race import Race
+    from models.background import Background
 else:
     Player = "Player"
     Campaign = "Campaign"
+    Race = "Race"
+    Background = "Background"
 
 
 default_classes = [
@@ -50,14 +54,14 @@ default_level_up_system = {
 
 
 def feat_names() -> List[str]:
-    feat_names = []
+    feat_name_list = []
 
-    with open("feats.json", "r") as f:
+    with open("feats.json", "r", encoding="utf-8") as f:
         feats = json.load(f)
 
     for feat in feats:
-        feat_names.append(feat["name"])
-    return feat_names
+        feat_name_list.append(feat["name"])
+    return feat_name_list
 
     # parse feats into a dict with the structure
 
@@ -461,9 +465,11 @@ class CharacterSheet(Base):
     )
     temporary_changes: Mapped[str] = mapped_column(JSONB, default={})
     # Relationships
-    campaigns: Mapped[List["Campaign"]] = relationship(
+    campaigns: Mapped[List[Campaign]] = relationship(
         secondary=campaign_pcs_table, back_populates="pcs"
     )
+    race: Mapped[Race] = relationship(Race)
+    background: Mapped[Background] = relationship(Background)
 
     def compile_proficiency_type(
         self,

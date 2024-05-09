@@ -11,7 +11,7 @@ from models.campaign_npcs_table import campaign_npcs_table
 logger.debug("***** Importing models/npc.py")
 
 if TYPE_CHECKING:
-    from models.location import Location
+    # from models.location import Location
     from models.stat_block import StatBlock
     from models.campaign import Campaign
 else:
@@ -41,13 +41,13 @@ class Npc(Base):
     notes: Mapped[str] = mapped_column(JSONB, default={})
     backstory: Mapped[str] = mapped_column(JSONB, default={})
     current_condition: Mapped[str] = mapped_column(JSONB, default={})
-    current_location_id: Mapped[int] = mapped_column(
-        ForeignKey("locations.id"), nullable=True
-    )
+    # current_location_id: Mapped[int] = mapped_column(
+    #     ForeignKey("locations.id"), nullable=True
+    # )
     # Relationships
-    current_location: Mapped[Location] = relationship(
-        Location, back_populates="inhabitants"
-    )
+    # current_location: Mapped["Location"] = relationship(
+    #     Location, back_populates="inhabitants"
+    # )
     stat_block: Mapped[StatBlock] = relationship(StatBlock)
 
     @property

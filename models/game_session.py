@@ -39,9 +39,9 @@ class GameSession(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     game_id: Mapped[int] = mapped_column(ForeignKey("games.id"))
     summary: Mapped[str] = mapped_column(String, default="")
-    current_location_id: Mapped[int] = mapped_column(
-        ForeignKey("locations.id"), nullable=True
-    )
+    # current_location_id: Mapped[int] = mapped_column(
+    #     ForeignKey("locations.id"), nullable=True
+    # )
     current_time: Mapped[str] = mapped_column(String, default="")
     player_actions_taken: Mapped[int] = mapped_column(Integer, default=0)
     created_at: Mapped[datetime] = mapped_column(TIMESTAMP, default=now())
